@@ -22,7 +22,7 @@ It helps me to keep track of my power usage, and shows me on which days I use a 
 
 - Download zip file: https://github.com/RaymiiOrg/nutsmanager/zipball/master and unzip to webroot (/var/www).  
 - Make sure json file is writable by webserver: *chown www-data:www-date power.json*
-  - (Or, *chmod 777 power.json if you are lazy)
+  - (Or, *chmod 777 power.json* if you are lazy)
 - Change the price values for the power, gas and water in the *functions.php* file.
   - Make sure you use a dot (.) and not a comma (,), php doesn't like comma's.
 - Start adding the values every day.
