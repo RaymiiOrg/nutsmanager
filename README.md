@@ -8,13 +8,11 @@ It helps me to keep track of my power usage, and shows me on which days I use a 
 
 ## Features
 
- - 4 different measurement units:
-   - Power
-   - Discount priced power
-   - Gas
-   - Water
-
-
+- 4 different measurement units:
+  - Power
+  - Discount priced power
+  - Gas
+  - Water
 - Graph which shows the difference with the day before
 - Overview of all values
 - Average difference
