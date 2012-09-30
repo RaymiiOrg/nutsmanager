@@ -2,7 +2,7 @@
 
 ![Screenshot with webpagescreenshot.info](http://www.webpagescreenshot.info/i/265618-9302012113752am.png)
 
-This is a power/gas/water usage tracker written in PHP. It uses a JSON text file for the values and the visual side is created with the excellent HTML5 Kickstart framework by Joshua Gatcke. The graphs are made with the flot framework.  
+NutsManager is a power/gas/water usage tracker written in PHP. It uses a JSON text file for the values and the visual side is created with the excellent HTML5 Kickstart framework by Joshua Gatcke. The graphs are made with the flot framework.  
 
 It helps me to keep track of my power usage, and shows me on which days I use a lot, and on which days I do not. That way, I know that a LAN party costs me a lot.
 
@@ -32,6 +32,6 @@ It helps me to keep track of my power usage, and shows me on which days I use a 
 
 ## Links
 
-Raymii.org: https://raymii.org/cms/p_NutsManager
-HTML5 Kickstart: https://github.com/joshuagatcke/HTML-KickStart
-Flot: https://github.com/flot/flot
+Raymii.org: https://raymii.org/cms/p_NutsManager  
+HTML5 Kickstart: https://github.com/joshuagatcke/HTML-KickStart  
+Flot: https://github.com/flot/flot  
