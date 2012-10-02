@@ -198,7 +198,7 @@ font-size:0.9em;
 -----------------------------------*/
 table{width:100%;margin:0 0 10px 0;text-align:left;border-collapse: collapse;}
 	thead, tbody{margin:0;padding:0;}
-	th, td{padding:7px 10px;font-size:0.9em;border-bottom:1px dotted #ddd;text-align:left;}
+	th, td{padding:7px 10px;font-size:0.9em;border-bottom:1px dotted #ddd;text-align:right;}
 	thead th{font-size:0.9em;padding:3px 10px;border-bottom:1px solid #ddd;}
 	tbody tr.last th,
 	tbody tr.last td{border-bottom:0;}
