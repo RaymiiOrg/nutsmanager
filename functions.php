@@ -89,8 +89,8 @@ function makegraph($array,$shortcode,$color,$maxitems) {
 
                 $totalitems=count($json_a);
                 $start_loop=0;
-                if(intval($totalitems) > intval($maxitems)) {
-                    $array_diff = intval($totalitems) - intval($maxitems);
+                if(floatval($totalitems) > floatval($maxitems)) {
+                    $array_diff = floatval($totalitems) - floatval($maxitems);
                     $start_loop = $array_diff;
                 }
                 echo "var d2 = [";
@@ -98,7 +98,7 @@ function makegraph($array,$shortcode,$color,$maxitems) {
                         if($codeitems < $maxitems+1) {
                             $day=date("D",strtotime($value['date'])); 
                             if($codeitems > 1) {
-                                $codemin =  intval($value['content']) - intval($lastcode);
+                                $codemin =  floatval($value['content']) - floatval($lastcode);
                             } else {
                                 $codemin = 0;
                             }
@@ -135,15 +135,15 @@ function showitems($array,$name,$shortcode,$maxitems,$price) {
             $lastcode=null;
                 $totalitems=count($json_a);
                 $start_loop=0;
-                if(intval($totalitems) > intval($maxitems)) {
-                    $array_diff = intval($totalitems) - intval($maxitems);
+                if(floatval($totalitems) > floatval($maxitems)) {
+                    $array_diff = floatval($totalitems) - floatval($maxitems);
                     $start_loop = $array_diff;
                 }
             foreach (array_slice($json_a, $start_loop) as $item => $value) {
                 if ($value['type'] == $shortcode) { 
                     if($codeitems < $maxitems+1) {
                         if($codeitems > 1) {
-                            $codemin =  intval($value['content']) - intval($lastcode);
+                            $codemin =  floatval($value['content']) - floatval($lastcode);
                             $itemprice = $codemin * $price;
                             $averageusage[] = $codemin;
                             $doavg = 1;
@@ -153,7 +153,7 @@ function showitems($array,$name,$shortcode,$maxitems,$price) {
                         }
                         echo "<b>" . $codeitems . ":</b>"  . $value['date'] . ' - ' . $name . ' usage: ' . $value['content'];              
                         if ($itemprice != 0) {
-                            echo ' - Difference with day before: ' . $codemin . '.';
+                            echo ' - Difference with day before: ' . round($codemin,3) . '.';
                             echo " [". $currency.": ".round($itemprice,2)."]";
                         }
                         echo " [ <a href=\"action.php?id=" .$item. "&action=edit\"><span class=\"icon small darkgray\" data-icon=\"7\"></span></a>";
@@ -165,7 +165,7 @@ function showitems($array,$name,$shortcode,$maxitems,$price) {
                 }   
             }
             if($doavg == 1) {
-                echo "Average difference: ". calculate_average($averageusage);
+                echo "Average difference: ". round(calculate_average($averageusage),2);
             }
 }
 #end showitems function
