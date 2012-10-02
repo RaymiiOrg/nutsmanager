@@ -49,35 +49,35 @@ function arrayFilter($arrHaystack, $arrFilter, $boolStrict = false)
             {
                 $strFKey = strtolower($strFKey);
                 $objFValue = strtolower($objFValue);
-                                
+
                 $boolMatch = (($strFKey == $strHKey) AND ($objFValue == $objHValue));
-            
+
                 if ($boolMatch == 1)
                     if ($boolStrict)
                         unset($arrFilter[$strFKey]);
                     else
                         $arrFilter = array();
-                        
-                if (count($arrFilter) == 0)
-                    return true;
+
+                    if (count($arrFilter) == 0)
+                        return true;
+                }
             }
+
+            if ($boolFound)
+                $arrResult[$strHKey] = $objHValue;
         }
-        
-        if ($boolFound)
-            $arrResult[$strHKey] = $objHValue;
+
+        return $arrResult;    
     }
 
-    return $arrResult;    
-}
+
+    function makegraph($array,$shortcode,$color,$maxitems) {
 
 
-function makegraph($array,$shortcode,$color,$maxitems) {
+        $arrFilter = array("type" => $shortcode);
+        $json_a=arrayFilter($array, $arrFilter, true);
 
-
-    $arrFilter = array("type" => $shortcode);
-    $json_a=arrayFilter($array, $arrFilter, true);
-
-    ?>
+        ?>
         <div id="<?php echo $shortcode; ?>-chart">
             <div id="<?php echo $shortcode; ?>graph" style="width:500px;height:150px;"></div>
             <script type="text/javascript">
@@ -95,78 +95,161 @@ function makegraph($array,$shortcode,$color,$maxitems) {
                 }
                 echo "var d2 = [";
                 foreach (array_slice($json_a, $start_loop) as $item => $value) {
-                        if($codeitems < $maxitems+1) {
-                            $day=date("D",strtotime($value['date'])); 
-                            if($codeitems > 1) {
-                                $codemin =  floatval($value['content']) - floatval($lastcode);
-                            } else {
-                                $codemin = 0;
-                            }
-                            if ($codeitems >= 2) {
-                                echo "[" . $codeitems. ", " . $codemin . "], ";
-                            }
-
-                            $codeitems+=1;
-                            $lastcode=$value['content'];
-
+                    if($codeitems < $maxitems+1) {
+                        $day=date("D",strtotime($value['date'])); 
+                        if($codeitems > 1) {
+                            $codemin =  floatval($value['content']) - floatval($lastcode);
+                        } else {
+                            $codemin = 0;
                         }
+                        if ($codeitems >= 2) {
+                            echo "[" . $codeitems. ", " . $codemin . "], ";
+                        }
+
+                        $codeitems+=1;
+                        $lastcode=$value['content'];
+
+                    }
                 }
                 echo "];";
                 ?>  
                 $.plot($("#<?php echo $shortcode; ?>graph"), [ d2 ], {colors: ['<?php echo $color; ?>']});
             });
-            </script>
-            <?php
+</script>
+<?php
 
-            echo "</div>";
-            unset($json_a);
-            unset($totalitems);
+echo "</div>";
+unset($json_a);
+unset($totalitems);
 }
 # end makegraph function
 
-function showitems($array,$name,$shortcode,$maxitems,$price) {
+function showitems($array,$name,$shortcode,$maxitems,$price,$outputformat) {
 
+    #Get the currency value from outside the function
     global $currency;
+    #Define the filter for the array filter
     $arrFilter = array("type" => $shortcode);
+    #Filter the json file array with the above filter (filter on type $shortcode)
     $json_a=arrayFilter($array, $arrFilter, true);
+
+    #Define 2 empty arrays for average usage and average price
     $averageusage = array('');
+    $averageprice = array('');
 
     $codeitems=1;
-            $lastcode=null;
-                $totalitems=count($json_a);
-                $start_loop=0;
-                if(floatval($totalitems) > floatval($maxitems)) {
-                    $array_diff = floatval($totalitems) - floatval($maxitems);
-                    $start_loop = $array_diff;
+    $lastcode=null;
+    $totalitems=count($json_a);
+
+    #Set the normal start of the loop on the first item in the array
+    $start_loop=0;
+    #If we define a maximum number of items, then make sure the array loop and such start at that position
+    #The newer items are later in the array.
+    if(intval($totalitems) > intval($maxitems)) {
+        $array_diff = floatval($totalitems) - floatval($maxitems);
+        $start_loop = $array_diff;
+    }
+
+    # first do some formatting if needed
+    switch ($outputformat) {
+        case 'list':
+            # do nothing
+            echo "";
+            break;
+        
+        default:
+            # Tables, yay!
+            echo "<table class=\"striped\">";
+            echo "<tr>";
+            echo "<th>#</th>";
+            echo "<th>Date</th>";
+            echo "<th>Usage</th>";
+            echo "<th>Difference</th>";
+            echo "<th>Price</th>";
+            echo "<th>Edit</th>";
+            echo "</tr>";
+            break;
+    }
+
+    foreach (array_slice($json_a, $start_loop) as $item => $value) {
+        if ($value['type'] == $shortcode) { 
+            if($codeitems < $maxitems+1) {
+                if($codeitems > 1) {
+                    $codemin =  floatval($value['content']) - floatval($lastcode);
+                    $itemprice = $codemin * $price;
+                    #Add the usage and price to the arrays for the averages
+                    $averageusage[] = $codemin;
+                    $averageprice[] = $itemprice;
+                } else {
+                    $codemin = 0;
+                    $itemprice = 0;
                 }
-            foreach (array_slice($json_a, $start_loop) as $item => $value) {
-                if ($value['type'] == $shortcode) { 
-                    if($codeitems < $maxitems+1) {
-                        if($codeitems > 1) {
-                            $codemin =  floatval($value['content']) - floatval($lastcode);
-                            $itemprice = $codemin * $price;
-                            $averageusage[] = $codemin;
-                            $doavg = 1;
-                        } else {
-                            $codemin = 0;
-                            $itemprice = 0;
-                        }
-                        echo "<b>" . $codeitems . ":</b>"  . $value['date'] . ' - ' . $name . ' usage: ' . $value['content'];              
+
+                switch ($outputformat) {
+                    default:
+                    echo "<tr>";
+                        echo "<td>".$codeitems."</td>";
+                        echo "<td>".$value['date']."</td>";
+                        echo "<td>".$value['content']."</td>";
                         if ($itemprice != 0) {
-                            echo ' - Difference with day before: ' . round($codemin,3) . '.';
-                            echo " [". $currency.": ".round($itemprice,2)."]";
+                                    #Difference
+                            echo "<td>" . round($codemin,3) . '</td>';
+                                    #Price                                        
+                            echo "<td>". $currency.": ".round($itemprice,2)."</td>";
+                        } else {
+                                    #Difference
+                            echo "<td> - </td>";
+                                    #Price
+                            echo "<td> - </td>";
                         }
-                        echo " [ <a href=\"action.php?id=" .$item. "&action=edit\"><span class=\"icon small darkgray\" data-icon=\"7\"></span></a>";
-                        echo " <a href=\"action.php?id=" .$item. "&action=delete\"><span class=\"icon small darkgray\" data-icon=\"T\"></span></a> ] \n\r";
-                        echo "<br />";
-                        $codeitems+=1;
-                        $lastcode=$value['content'];
+                        echo "<td>";
+                                    #Edit
+                        echo "<a href=\"action.php?id=" .$item. "&action=edit\"><span class=\"icon small darkgray\" data-icon=\"7\"></span></a>";
+                        echo " - ";            
+                        #Delete
+                        echo "<a href=\"action.php?id=" .$item. "&action=delete\"><span class=\"icon small darkgray\" data-icon=\"T\"></span></a>";
+                    echo "</tr>";
+                    break;
+
+                    case 'list':
+                    echo "<b>" . $codeitems . ":</b>"  . $value['date'] . ' - ' . $name . ' usage: ' . $value['content'];              
+                    if ($itemprice != 0) {
+                        echo ' - Difference with day before: ' . round($codemin,3) . '.';
+                        echo " [". $currency.": ".round($itemprice,2)."]";
                     }
-                }   
+                    echo " [ <a href=\"action.php?id=" .$item. "&action=edit\"><span class=\"icon small darkgray\" data-icon=\"7\"></span></a></td>";
+                    echo " <a href=\"action.php?id=" .$item. "&action=delete\"><span class=\"icon small darkgray\" data-icon=\"T\"></span></a> ] \n\r";
+                    echo "<br />";
+                    break;
+
+                }
+
+                $codeitems+=1;
+                $lastcode=$value['content'];
             }
-            if($doavg == 1) {
-                echo "Average difference: ". round(calculate_average($averageusage),2);
-            }
+        }   
+    }
+    switch ($outputformat) {
+        case 'list':
+            echo "Average difference: ". round(calculate_average($averageusage),2) . ".";
+            echo "Average price: ". $currency . round(calculate_average($averageprice),2) . ".";
+            break;
+        
+        default:
+            echo "<tr>";
+                echo "<td colspan=\"3\">";
+                    echo "Average difference: ". round(calculate_average($averageusage),2);
+                echo "</td>";
+                echo "<td colspan=\"3\">";
+                    echo "Average price: " . $currency . " " . round(calculate_average($averageprice),2);
+                echo "</td>";
+            echo "</tr>";
+
+            echo "</table>";
+            break;
+    }
+    
+
 }
 #end showitems function
 
