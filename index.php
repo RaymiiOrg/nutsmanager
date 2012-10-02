@@ -58,10 +58,10 @@ if(is_array($json_a)) {
 
 	} else {
 		
-		echo "<h3>Graph</h3>";
+		#echo "<h3>Graph</h3>";
 		makegraph($json_a,"NPP","yellow",11);
 
-		echo "<h3>Items</h3>";
+		#echo "<h3>Items</h3>";
 		showitems($json_a,"Normal power","NPP",11,$NPPprice);
 
 	}
@@ -84,10 +84,10 @@ if(is_array($json_a)) {
 	} else {
 
 
-		echo "<h3>Graph</h3>";
+		#echo "<h3>Graph</h3>";
 		makegraph($json_a,"DPP","green",11);
 
-		echo "<h3>Items</h3>";
+		#echo "<h3>Items</h3>";
 		showitems($json_a,"Cheap power","DPP",11,$DPPprice);
 
 
@@ -112,10 +112,10 @@ if(is_array($json_a)) {
 	} else {
 
 
-		echo "<h3>Graph</h3>";
+		#echo "<h3>Graph</h3>";
 		makegraph($json_a,"GAS","purple",11);
 
-		echo "<h3>Items</h3>";
+		#echo "<h3>Items</h3>";
 		showitems($json_a,"Gas","GAS",11,$GASprice);
 
 
@@ -139,10 +139,10 @@ if(is_array($json_a)) {
 
 	} else {
 
-		echo "<h3>Graph</h3>";
+		#echo "<h3>Graph</h3>";
 		makegraph($json_a,"H2O","cyan",11);
 
-		echo "<h3>Items</h3>";
+		#echo "<h3>Items</h3>";
 		showitems($json_a,"Water","H2O",11,$H2Oprice);
 
 	} 
