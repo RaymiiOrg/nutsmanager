@@ -199,4 +199,29 @@ function calculate_average($arr) {
 }
 #end average calculate
 
+
+
+# start showform function
+
+function showinputform($actionpage) {
+
+    $vandaag=date('m-d-Y');
+
+    echo "<h3>Add Value</h3>\n";
+    echo "<form name=\"edit\" action=\"". $actionpage ."\" method=\"GET\">\n";
+    echo "<select name=\"type\">\n";
+    echo "<option value=\"NPP\">Normal Price power</option>\n";
+    echo "<option value=\"DPP\">Discount Price power</option>\n";
+    echo "<option value=\"GAS\">Gas</option>\n";
+    echo "<option value=\"H2O\">Water</option>\n";
+    echo "</select>\n";
+    echo "  <input name=\"content\" type=\"text\" placeholder=\"Value\" ></input>\n";
+    echo "<input name=\"date\" type=\"text\" value=\"${vandaag}\"></input>\n";
+    echo "<input type=\"hidden\" name=\"action\" value=\"add\"></input>\n";
+    echo "&nbsp; &nbsp; ";
+    echo "<input type=\"submit\" name=\"submit\" value=\"Add Item\"></input>\n";
+    echo "</form>\n";
+}
+
+
 ?>

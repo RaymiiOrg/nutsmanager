@@ -36,7 +36,8 @@ include("header.php");
 
 echo "<h1>NutsManager</h1>";
 
-include("form.php");
+## Call the form function from the functions file.
+showinputform("action.php");
 
 if(is_array($json_a)) {		
 
