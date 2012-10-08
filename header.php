@@ -23,7 +23,7 @@
 
 <!DOCTYPE html>
 <html><head>
-<title>NursManager - Raymii.org</title>
+<title>NutsManager - Raymii.org</title>
 <meta charset="UTF-8">
 <meta name="description" content="" />
 <!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
