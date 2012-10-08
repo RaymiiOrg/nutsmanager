@@ -365,7 +365,7 @@ function createdatearray($json_a,$itemtype,$maand) {
         echo "</table>\n\n\n";
 
     } else {
-        echo "<p><em><strong>".$maandnaam."</strong> has no items. </em></p>";
+        echo " ";
     }
 }
 # end date function
