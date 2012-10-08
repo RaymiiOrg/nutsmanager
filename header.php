@@ -23,7 +23,7 @@
 
 <!DOCTYPE html>
 <html><head>
-<title>PowerManager - Raymii.org</title>
+<title>NursManager - Raymii.org</title>
 <meta charset="UTF-8">
 <meta name="description" content="" />
 <!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
@@ -33,10 +33,7 @@
 <script type="text/javascript" src="js/prettify.js"></script>                                   
 <link rel="stylesheet" type="text/css" href="style.css" media="all" />
 <link rel="stylesheet" type="text/css" href="css/kickstart.css" media="all" /> 
-
 </head>
-
-
 <body><a id="top-of-page"></a><div id="wrap" class="clearfix">
-	<div class="col_9">
+<div class="col_9">
 

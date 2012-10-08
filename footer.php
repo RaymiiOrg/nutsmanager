@@ -4,7 +4,7 @@
 	<p>
 		<a href="index.php">Main page</a><br />
 
-		<a href="full.php">Click here to see the full history</a> (this loads all entries and lets you edit them. It might take a little time to load.)<br />
+		<a href="full.php">Click here to see the full history, sorted per month.</a> (this loads all entries and lets you edit them. It might take a little time to load.)<br />
 
 	</p>
 	<br />
@@ -24,7 +24,7 @@
 <!-- Footer -->
 <div class="col_12">
 <hr />
-NutsManager v0.0.1 by Remy van Elst - <a href="https://raymii.org">Raymii.org</a>.
+NutsManager v0.0.3 by Remy van Elst - <a href="https://raymii.org">Raymii.org</a>.
 </div>
 
 </div>

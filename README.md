@@ -6,6 +6,17 @@ NutsManager is a power/gas/water usage tracker written in PHP. It uses a JSON te
 
 It helps me to keep track of my power usage, and shows me on which days I use a lot, and on which days I do not. That way, I know that a LAN party costs me a lot.
 
+## Changelog
+
+### v0.0.3 
+- Full overview is now sorted by month.
+
+### v0.0.2
+- Fixed a bug where PHP takes variables as int. and not as float.
+
+### v0.0.1
+- Initial release
+
 ## Features
 
 - 4 different measurement units:
@@ -14,7 +25,7 @@ It helps me to keep track of my power usage, and shows me on which days I use a 
   - Gas
   - Water
 - Graph which shows the difference with the day before
-- Overview of all values
+- Overview of all values, sorted per month
 - Average difference
 - Average price
 - Pretty colours

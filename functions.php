@@ -140,6 +140,8 @@ function showitems($array,$name,$shortcode,$maxitems,$price,$outputformat) {
     $codeitems=1;
     $lastcode=null;
     $totalitems=count($json_a);
+    
+
 
     #Set the normal start of the loop on the first item in the array
     $start_loop=0;
@@ -154,21 +156,21 @@ function showitems($array,$name,$shortcode,$maxitems,$price,$outputformat) {
     switch ($outputformat) {
         case 'list':
             # do nothing
-            echo "";
-            break;
+        echo "";
+        break;
         
         default:
             # Tables, yay!
-            echo "<table class=\"striped\">";
-            echo "<tr>";
-            echo "<th>#</th>";
-            echo "<th>Date</th>";
-            echo "<th>Usage</th>";
-            echo "<th>Difference</th>";
-            echo "<th>Price</th>";
-            echo "<th>Edit</th>";
-            echo "</tr>";
-            break;
+        echo "<table class=\"striped\">";
+        echo "<tr>";
+        echo "<th>#</th>";
+        echo "<th>Date</th>";
+        echo "<th>Usage</th>";
+        echo "<th>Difference</th>";
+        echo "<th>Price</th>";
+        echo "<th>Edit</th>";
+        echo "</tr>";
+        break;
     }
 
     foreach (array_slice($json_a, $start_loop) as $item => $value) {
@@ -188,26 +190,26 @@ function showitems($array,$name,$shortcode,$maxitems,$price,$outputformat) {
                 switch ($outputformat) {
                     default:
                     echo "<tr>";
-                        echo "<td>".$codeitems."</td>";
-                        echo "<td>".$value['date']."</td>";
-                        echo "<td>".$value['content']."</td>";
-                        if ($itemprice != 0) {
+                    echo "<td>".$codeitems."</td>";
+                    echo "<td>".date('D d M Y',strtotime(str_replace('-', '/',$value["date"])))."</td>";
+                    echo "<td>".$value['content']."</td>";
+                    if ($itemprice != 0) {
                                     #Difference
-                            echo "<td>" . round($codemin,3) . '</td>';
+                        echo "<td>" . round($codemin,3) . '</td>';
                                     #Price                                        
-                            echo "<td>". $currency.": ".round($itemprice,2)."</td>";
-                        } else {
+                        echo "<td>". $currency.": ".round($itemprice,2)."</td>";
+                    } else {
                                     #Difference
-                            echo "<td> - </td>";
+                        echo "<td> - </td>";
                                     #Price
-                            echo "<td> - </td>";
-                        }
-                        echo "<td>";
+                        echo "<td> - </td>";
+                    }
+                    echo "<td>";
                                     #Edit
-                        echo "<a href=\"action.php?id=" .$item. "&action=edit\"><span class=\"icon small darkgray\" data-icon=\"7\"></span></a>";
-                        echo " - ";            
+                    echo "<a href=\"action.php?id=" .$item. "&action=edit\"><span class=\"icon small darkgray\" data-icon=\"7\"></span></a>";
+                    echo " - ";            
                         #Delete
-                        echo "<a href=\"action.php?id=" .$item. "&action=delete\"><span class=\"icon small darkgray\" data-icon=\"T\"></span></a>";
+                    echo "<a href=\"action.php?id=" .$item. "&action=delete\"><span class=\"icon small darkgray\" data-icon=\"T\"></span></a>";
                     echo "</tr>";
                     break;
 
@@ -231,22 +233,22 @@ function showitems($array,$name,$shortcode,$maxitems,$price,$outputformat) {
     }
     switch ($outputformat) {
         case 'list':
-            echo "Average difference: ". round(calculate_average($averageusage),2) . ".";
-            echo "Average price: ". $currency . round(calculate_average($averageprice),2) . ".";
-            break;
+        echo "Average difference: ". round(calculate_average($averageusage),2) . ".";
+        echo "Average price: ". $currency . round(calculate_average($averageprice),2) . ".";
+        break;
         
         default:
-            echo "<tr>";
-                echo "<td colspan=\"3\">";
-                    echo "Average difference: ". round(calculate_average($averageusage),2);
-                echo "</td>";
-                echo "<td colspan=\"3\">";
-                    echo "Average price: " . $currency . " " . round(calculate_average($averageprice),2);
-                echo "</td>";
-            echo "</tr>";
+        echo "<tr>";
+        echo "<td colspan=\"3\">";
+        echo "Average difference: ". round(calculate_average($averageusage),2);
+        echo "</td>";
+        echo "<td colspan=\"3\">";
+        echo "Average price: " . $currency . " " . round(calculate_average($averageprice),2);
+        echo "</td>";
+        echo "</tr>";
 
-            echo "</table>";
-            break;
+        echo "</table>";
+        break;
     }
     
 
@@ -282,6 +284,91 @@ function calculate_average($arr) {
 }
 #end average calculate
 
+# start date function
+function createdatearray($json_a,$itemtype,$maand) {
+    global $currency;
+    ${$itemtype . "month"} = array();
+    ${$itemtype . "items"} = array();
+    foreach ($json_a as $item => $itemarray) {
+        if ($itemarray["type"] == strtoupper($itemtype)) {
+            ${$itemtype . "items"}[] = array("content" => $itemarray["content"], "date" => $itemarray["date"], "ID" => $item);
+        } 
+    }
+
+    for ($i=0; $i < count(${$itemtype . "items"}); $i++) { 
+        $idate=date('n',strtotime(str_replace('-', '/',${$itemtype . "items"}[$i]["date"])));
+        ${$itemtype . "month"}[$idate][${$itemtype . "items"}["$i"]["ID"]] = array("date" => ${$itemtype ."items"}[$i]["date"], "content" => ${$itemtype ."items"}[$i]["content"]);
+    }
+
+    $maandnaam=date( 'F', mktime(0, 0, 0, $maand) );
+    global ${strtoupper($itemtype) . "price"};
+    $price = ${strtoupper($itemtype) . "price"};
+    ksort(${$itemtype."month"});
+
+    if (count(${$itemtype."month"}[$maand]) != 0) {
+
+        echo "<h3>" . $maandnaam . "</h3>\n";
+        echo "<table class=\"striped\">\n";
+        echo "<tr>\n";
+        echo "<th>Day</th>\n";
+        echo "<th>Usage</th>\n";
+        echo "<th>Difference</th>\n";
+        echo "<th>Price</th>\n";
+        echo "<th>Edit/Delete</th>\n";
+        echo "</tr>\n";
+        $items=0;
+        $lastcontent=0;
+        $totaloftype=0;
+        $totalprice=0;
+        
+        foreach (${$itemtype . "month"}[$maand] as $key => $value) {
+            if (!empty($value["date"])) {
+                if ($items >= 1) {
+                    $diff = $value["content"] - $lastcontent;
+                    $itemprice = floatval($diff) * floatval($price);
+                } else {
+                    $itemprice = 0;
+                }
+                
+                echo "<tr>\n";
+                echo "<td>\n";
+                echo date('l',strtotime(str_replace('-', '/',$value["date"]))) . " " . date('d',strtotime(str_replace('-', '/',$value["date"]))) . " " . date('M',strtotime(str_replace('-', '/',$value["date"])));
+                echo "</td>\n";
+                echo "<td>" . $value["content"] . "</td>\n";
+
+                if ($items >= 1) {
+                    #difference
+                    echo "<td>" . $diff . "</td>\n";
+
+                } else {
+                    echo "<td> - </td>\n";
+                }
+                #price
+                echo "<td>".$currency.": " . round($itemprice,3) . "</td>\n";
+                echo "<td>";
+                            #Edit
+                echo "<a href=\"action.php?id=" .$key. "&action=edit\"><span class=\"icon small darkgray\" data-icon=\"7\"></span></a>";
+                echo " - ";            
+                #Delete
+                echo "<a href=\"action.php?id=" .$key. "&action=delete\"><span class=\"icon small darkgray\" data-icon=\"T\"></span></a>";
+
+                $lastcontent=$value["content"];
+                $totalprice += $itemprice;
+                $totaloftype += $value["content"];
+                $items += 1;
+                echo "</tr>\n";
+            }
+        }
+        echo "<tr>\n";
+        echo"<td colspan=\"2\">Total usage: " . round($totaloftype,3) . "</td>\n";
+        echo "<td colspan=\"2\">Total price: " . $currency . ": ".round($totalprice,3) . "</td>\n";
+        echo "</table>\n\n\n";
+
+    } else {
+        echo "<p><em><strong>".$maandnaam."</strong> has no items. </em></p>";
+    }
+}
+# end date function
 
 
 # start showform function
@@ -305,6 +392,7 @@ function showinputform($actionpage) {
     echo "<input type=\"submit\" name=\"submit\" value=\"Add Item\"></input>\n";
     echo "</form>\n";
 }
+
 
 
 ?>

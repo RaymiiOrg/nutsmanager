@@ -33,11 +33,25 @@ include("functions.php");
 include("header.php");
 
 echo '<h1> NutsManager </h1>';
+?>
+<ul class="tabs center">
+	<li><a href="#npp">Normal Power</a></li>
+	<li><a href="#dpp">Discount Power</a></li>
+	<li><a href="#gas">Gas</a></li>
+	<li><a href="#h2o">Water</a></li>
+</ul>
+
+
+
+
+<?
+
 
 if(is_array($json_a)) {		
 
-		# start npp
-	echo "<div id='npp'>";
+	
+	# start npp
+	echo "<div id=\"npp\" class=\"tab-content\">";
 	echo"<h2>Normal Price Power</h2>";
 
 	foreach ($json_a as $item => $value) {
@@ -51,13 +65,19 @@ if(is_array($json_a)) {
 
 	} else {
 
-		showitems($json_a,"Normal power","NPP",999,$NPPprice);
+		
+		for ($i=1; $i < 13; $i++) { 
+    		#Months
+			createdatearray($json_a,"npp",$i);
+
+		}
+		
 	}
 	echo "</div>";
 	# end npp
 
-		# start dpp
-	echo "<div id='dpp'>";
+	# start dpp
+	echo "<div id=\"dpp\" class=\"tab-content\">";
 	echo"<h2>Discount Price Power</h2>";
 
 	foreach ($json_a as $item => $value) {
@@ -71,16 +91,17 @@ if(is_array($json_a)) {
 
 	} else {
 
-
-		showitems($json_a,"Cheap power","DPP",999,$DPPprice);
-
+		
+		for ($i=1; $i < 13; $i++) { 
+			createdatearray($json_a,"dpp",$i);
+		}	
 	}
 	echo "</div>";
 	# end dpp
 
 
-		# start gas
-	echo "<div id='gas'>";
+	# start gas
+	echo "<div id=\"gas\" class=\"tab-content\">";
 	echo"<h2>Gas</h2>";
 
 	foreach ($json_a as $item => $value) {
@@ -94,32 +115,41 @@ if(is_array($json_a)) {
 
 	} else {
 
-		showitems($json_a,"Gas","GAS",999,$GASprice);
-
+		
+		for ($i=1; $i < 13; $i++) { 
+			createdatearray($json_a,"gas",$i);
+		}
+		
 	}
 	echo "</div>";
 	# end gas
 
 	# start water
-	echo '<div id="water">';
+	echo "<div id=\"h2o\" class=\"tab-content\">";
 	echo"<h2>Water</h2>";
 
 	foreach ($json_a as $item => $value) {
 		if ($value['type'] == "H2O") {	
-			$havewater=1;
+			$haveh20=1;
 		}
 	}
 
-	if ($havewater == 0) {
+	if ($haveh2o == 0) {
 		echo "No data to display yet. Please add it.";
 
-	} else {			
+	} else {
 
-		showitems($json_a,"Water","H2O",999,$price);
-
-	} 
+		
+		for ($i=1; $i < 13; $i++) { 
+			createdatearray($json_a,"h2o",$i);
+		}
+		
+	}
 	echo "</div>";
-# END WATER
+	# END WATER
+
+
+
 } else {
 		# no json array
 	echo "No items in file. Unknown error.";
