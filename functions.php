@@ -338,13 +338,13 @@ function createdatearray($json_a,$itemtype,$maand) {
 
                 if ($items >= 1) {
                     #difference
-                    echo "<td>" . $diff . "</td>\n";
+                    echo "<td>" . round($diff,3) . "</td>\n";
 
                 } else {
                     echo "<td> - </td>\n";
                 }
                 #price
-                echo "<td>".$currency.": " . round($itemprice,3) . "</td>\n";
+                echo "<td>".$currency.": " . round($itemprice,2) . "</td>\n";
                 echo "<td>";
                             #Edit
                 echo "<a href=\"action.php?id=" .$key. "&action=edit\"><span class=\"icon small darkgray\" data-icon=\"7\"></span></a>";
@@ -354,15 +354,23 @@ function createdatearray($json_a,$itemtype,$maand) {
 
                 $lastcontent=$value["content"];
                 $totalprice += $itemprice;
-                $totaloftype += $value["content"];
+                
                 $items += 1;
                 echo "</tr>\n";
             }
         }
         echo "<tr>\n";
+        $firstelement=reset(${$itemtype . "month"}[$maand]);
+        $firstelement=$firstelement["content"];        
+        $lastelement=end(${$itemtype . "month"}[$maand]);
+        $lastelement=$lastelement["content"];
+        $totaloftype=floatval($lastelement)-floatval($firstelement);
+        reset(${$itemtype . "month"}[$maand]);
         echo"<td colspan=\"2\">Total usage: " . round($totaloftype,3) . "</td>\n";
-        echo "<td colspan=\"2\">Total price: " . $currency . ": ".round($totalprice,3) . "</td>\n";
-        echo "</table>\n\n\n";
+        echo "<td colspan=\"2\">Total price: " . $currency . ": ".round($totalprice,2) . "</td>\n";
+        echo "<td></td>";
+        echo "</tr>";
+        echo "</table>";
 
     } else {
         echo " ";

@@ -130,7 +130,7 @@ if(is_array($json_a)) {
 
 	foreach ($json_a as $item => $value) {
 		if ($value['type'] == "H2O") {	
-			$haveh20=1;
+			$haveh2o=1;
 		}
 	}
 
