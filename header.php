@@ -19,11 +19,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+$productname = "NutsManager";
+$productversion = "v0.0.4";
+
 ?>
 
 <!DOCTYPE html>
 <html><head>
-<title>NutsManager - Raymii.org</title>
+<title><?php echo $productname; ?> - Raymii.org</title>
 <meta charset="UTF-8">
 <meta name="description" content="" />
 <!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->

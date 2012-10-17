@@ -45,16 +45,16 @@ if(is_array($json_a)) {
 
 		# start npp
 	echo "<div id='npp'>";
-	echo"<h2>Normal Price Power</h2>";
+	echo"<h2>".$LANG["npp"]."</h2>";
 
-	foreach ($json_a as $item => $value) {
+	foreach ((array) $json_a as $item => $value) {
 		if ($value['type'] == "NPP") {	
 			$havenpp=1;
 		}
 	}
 
 	if ($havenpp == 0) {
-		echo "No data to graph or display yet. Please add it.";
+		echo $LANG["nodatatograph"];
 
 	} else {
 		
@@ -62,7 +62,7 @@ if(is_array($json_a)) {
 		makegraph($json_a,"NPP","yellow",11);
 
 		#echo "<h3>Items</h3>";
-		showitems($json_a,"Normal power","NPP",11,$NPPprice);
+		showitems($json_a,$LANG["npp"],"NPP",11,$NPPprice,"");
 
 	}
 	echo "</div>";
@@ -70,16 +70,16 @@ if(is_array($json_a)) {
 
 		# start dpp
 	echo "<div id='dpp'>";
-	echo"<h2>Discount Price Power</h2>";
+	echo"<h2>".$LANG["dpp"]."</h2>";
 
-	foreach ($json_a as $item => $value) {
+	foreach ((array) $json_a as $item => $value) {
 		if ($value['type'] == "DPP") {	
 			$havedpp=1;
 		}
 	}
 
 	if ($havedpp == 0) {
-		echo "No data to graph or display yet. Please add it.";
+		echo $LANG["nodatatograph"];
 
 	} else {
 
@@ -88,7 +88,7 @@ if(is_array($json_a)) {
 		makegraph($json_a,"DPP","green",11);
 
 		#echo "<h3>Items</h3>";
-		showitems($json_a,"Cheap power","DPP",11,$DPPprice);
+		showitems($json_a,$LANG["dpp"],"DPP",11,$DPPprice,"");
 
 
 	}
@@ -98,16 +98,16 @@ if(is_array($json_a)) {
 
 		# start gas
 	echo "<div id='gas'>";
-	echo"<h2>Gas</h2>";
+	echo"<h2>".$LANG["gas"]."</h2>";
 
-	foreach ($json_a as $item => $value) {
+	foreach ((array) $json_a as $item => $value) {
 		if ($value['type'] == "GAS") {	
 			$havegas=1;
 		}
 	}
 
 	if ($havegas == 0) {
-		echo "No data to graph or display yet. Please add it.";
+		echo $LANG["nodatatograph"];
 
 	} else {
 
@@ -116,7 +116,7 @@ if(is_array($json_a)) {
 		makegraph($json_a,"GAS","purple",11);
 
 		#echo "<h3>Items</h3>";
-		showitems($json_a,"Gas","GAS",11,$GASprice);
+		showitems($json_a,$LANG["gas"],"GAS",11,$GASprice,"");
 
 
 
@@ -126,16 +126,16 @@ if(is_array($json_a)) {
 
 	# start water
 	echo '<div id="water">';
-	echo"<h2>Water</h2>";
+	echo"<h2>".$LANG["water"]."</h2>";
 
-	foreach ($json_a as $item => $value) {
+	foreach ((array) $json_a as $item => $value) {
 		if ($value['type'] == "H2O") {	
 			$havewater=1;
 		}
 	}
 
 	if ($havewater == 0) {
-		echo "No data to graph or display yet. Please add it.";
+		echo $LANG["nodatatograph"];
 
 	} else {
 
@@ -143,14 +143,14 @@ if(is_array($json_a)) {
 		makegraph($json_a,"H2O","cyan",11);
 
 		#echo "<h3>Items</h3>";
-		showitems($json_a,"Water","H2O",11,$H2Oprice);
+		showitems($json_a,$LANG["water"],"H2O",11,$H2Oprice,"");
 
 	} 
 	echo "</div>";
 # END WATER
 } else {
 		# no json array
-	echo "No items in file. Unknown error.";
+	echo $LANG["nodata"];
 }
 
 ?>

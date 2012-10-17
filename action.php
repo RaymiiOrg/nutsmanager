@@ -34,14 +34,14 @@ include("functions.php");
 
 #Check if we get an action
 if (empty($_GET['action'])) {
-	echo"Error: What do you want me to do? \n<br /><a href=\"index.php\">Go back and try again please.</a>";
+	echo "".$LANG["noaction"]." \n<br /><a href=\"index.php\">".$LANG["goback"].".</a>";
 } elseif (isset($_GET['action']) && $_GET['action'] == 'edit' ) {
 #User wants to edit a value.
 	#sanitize the ID.
 	$id=htmlspecialchars($_GET['id']);
 	#We need to match the ID to the item.
 	$found=0;
-	echo "<h2>Edit</h2>";
+	echo "<h2>".$LANG["edit"]."</h2>";
 	#Loop through the entire JSON file.
 	foreach ($json_a as $item => $value) {
 		#Is it a match, then show the edit form.
@@ -61,7 +61,7 @@ if (empty($_GET['action'])) {
 
 	if ($found == 0) {
 		#We don't have a match.
-		echo"Error: Item not found.";
+		echo $LANG["itemnotfound"];
 	} 
 	
 }  elseif (isset($_GET['submit']) && $_GET['action'] == 'add' && !empty($_GET['content']) && !empty($_GET['type']) && !empty($_GET['date'])) {
@@ -75,13 +75,13 @@ if (empty($_GET['action'])) {
 	#Time for some falidation..
 	#We only want numeric shizzle, we cannot graph text	
 	if(!is_numeric($value)) {
-		die("Sorry, you have to give me a numeric value. Error code x89");
+		die($LANG["enumeric"]);
 	}
 	$date=htmlspecialchars($_GET['date']);	
 
 	#is it a date I want?
 	if(!preg_match('/([0-9]{2}-[0-9]{2}-[0-9]{4})/', $date)){
-		die("Sorry, the date you have me is not valid. The format is: MM-DD-YYYY. Error code x72.");
+		die($LANG["edateformat"]);
 	}
 
 	#does the date already exists
@@ -90,7 +90,7 @@ if (empty($_GET['action'])) {
 	foreach ($filt_a as $item => $loopvalue) {
 
 		if($loopvalue['date'] == $date) {
-				die("This date already exists. Please edit or delete the corresponding item first. Error code x293");
+				die($LANG["edateexist"]);
 			}
 		}
 
@@ -101,7 +101,7 @@ if (empty($_GET['action'])) {
 		$typevalid=1;
 	}
 	if($typevalid == 0) {
-		die("The type you gave is not valid. Error code x62.");
+		die($LANG["etypenotvalid"]);
 	}
 	# because stackoverflow told me to.
 	$datecomma=str_replace('-', '/', $date);
@@ -124,15 +124,15 @@ if (empty($_GET['action'])) {
 	ksort($current);
 	$current=json_encode($current);	
 	if(file_put_contents($file, $current, LOCK_EX)) {
-		echo"Item added.<br />\nYou will now be redirected back to the task list.<br /> \n";
-		echo"<a href=\"index.php\">If that does not happen, please click here.</a>";
+		echo $LANG["itemadded"]."<br /> \n";
+		echo"<a href=\"index.php\">".$LANG["noredirect"]."</a>";
 		?>
 		<script type="text/javascript">
 		window.location = "index.php"
 		</script>
 		<?php
 	} else {
-		echo"Failure. The item could not be added. Please check if the JSON database file exists and is writable. Code x41";
+		echo $LANG["efailjsonwrite"];
 	}
 } elseif (isset($_GET['submit']) && $_GET['action'] == 'update' && !empty($_GET['id']) && !empty($_GET['content'])) {
 #update value
@@ -141,7 +141,7 @@ if (empty($_GET['action'])) {
 	#Time for some falidation..
 	#We only want numeric shizzle, we cannot graph text	
 	if(!is_numeric($replacedvalue)) {
-		die("Sorry, you have to give me a numeric value. Error code x89");
+		die($LANG["enumeric"]);
 	}
 
 	foreach ($json_a as $item => $value) {
@@ -156,20 +156,20 @@ if (empty($_GET['action'])) {
 			$replaced = json_encode($replaced);
 			
 			if(file_put_contents($file, $replaced, LOCK_EX)) {
-				echo"Item updated. You will now be redirected back to the main page.";
-				echo"<a href=\"index.php\">If that does not happen, please click here.</a>";
+				echo $LANG["actionsuccess"]."<br /> \n";
+				echo"<a href=\"index.php\">".$LANG["noredirect"]."</a>";
 				?>
 				<script type="text/javascript">
 				window.location = "index.php"
 				</script>
 				<?php
 			} else {
-				echo "Writing item to JSON file failed. Error code x91.";
+				echo $LANG["efailjsonwrite"];
 			}
 		}
 	}
 	if ($found==0) {
-		echo "Error. Item not found. <a href=\"index.php\">Go back and try again please..</a>";
+		echo "<a href=\"index.php\">".$LANG["eitemnotfound"]."</a>";
 	}
 	
 } elseif (isset($_GET['action']) && $_GET['action'] == 'delete' && !empty($_GET['id'])) {
@@ -184,23 +184,23 @@ if (empty($_GET['action'])) {
 			$deleted = json_encode($current);
 			ksort($deleted);		
 			if(file_put_contents($file, $deleted, LOCK_EX)) {
-				echo"The item is deleted.<br />\nYou will now be redirected back to the task list. ";
-				echo"<a href=\"index.php\">If that does not happen, please click here.</a>";
+				echo $LANG["actionsuccess"]."<br /> \n";
+				echo"<a href=\"index.php\">".$LANG["noredirect"]."</a>";
 				?>
 				<script type="text/javascript">
-					window.location = "index.php"
-					</script>
-					<?php
-				} else {
-					echo "Writing item to JSON file failed. Error code x91.";
+				window.location = "index.php"
+				</script>
+				<?php
+			} else {
+				echo $LANG["efailjsonwrite"];
 				}
 			}
 		}
 		if ($found==0) {
-			echo "Error. Item not found. <a href=\"index.php\">Please go back to the main page and try again.</a> Code x02.";
+			echo "<a href=\"index.php\">".$LANG["eitemnotfound"]."</a>";
 		}
 	} else {
-		echo "Error: What do you want me to do?\n<br />Code x03. ";
+		echo $LANG["enovalidaction"]."\n<br />Code x03. ";
 	}	
 	echo "</div>";
 

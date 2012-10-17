@@ -30,10 +30,12 @@ $H2Oprice=0.914;
 # price symbol/name
 $currency="EUR";
 
+require('language.en.php');
+
 
 //http://www.tek-tips.com/viewthread.cfm?qid=1568788
-function arrayFilter($arrHaystack, $arrFilter, $boolStrict = false)
-{
+function arrayFilter($arrHaystack, $arrFilter, $boolStrict = false) {
+    global $LANG;
     if (!is_array($arrFilter)) $arrFilter = array($arrFilter);
     if (!is_array($arrHaystack)) $arrHaystack = array($arrHaystack);
 
@@ -43,6 +45,8 @@ function arrayFilter($arrHaystack, $arrFilter, $boolStrict = false)
             $boolFound = arrayFilter($objHValue, $arrFilter, $boolStrict);
         else
         {
+            $boolFound=NULL;
+            $arrResult=NULL;
             $strHKey = strtolower($strHKey);
             $objHValue = strtolower($objHValue);
             foreach ($arrFilter as $strFKey => $objFValue)
@@ -73,7 +77,7 @@ function arrayFilter($arrHaystack, $arrFilter, $boolStrict = false)
 
     function makegraph($array,$shortcode,$color,$maxitems) {
 
-
+        global $LANG;
         $arrFilter = array("type" => $shortcode);
         $json_a=arrayFilter($array, $arrFilter, true);
 
@@ -125,7 +129,7 @@ unset($totalitems);
 # end makegraph function
 
 function showitems($array,$name,$shortcode,$maxitems,$price,$outputformat) {
-
+    global $LANG;
     #Get the currency value from outside the function
     global $currency;
     #Define the filter for the array filter
@@ -152,6 +156,9 @@ function showitems($array,$name,$shortcode,$maxitems,$price,$outputformat) {
         $start_loop = $array_diff;
     }
 
+    if (!isset($outputformat)) {
+        $outputformat=NULL;
+    }
     # first do some formatting if needed
     switch ($outputformat) {
         case 'list':
@@ -164,11 +171,11 @@ function showitems($array,$name,$shortcode,$maxitems,$price,$outputformat) {
         echo "<table class=\"striped\">";
         echo "<tr>";
         echo "<th>#</th>";
-        echo "<th>Date</th>";
-        echo "<th>Usage</th>";
-        echo "<th>Difference</th>";
-        echo "<th>Price</th>";
-        echo "<th>Edit</th>";
+        echo "<th>".$LANG["date"]."</th>";
+        echo "<th>".$LANG["usage"]."</th>";
+        echo "<th>".$LANG["difference"]."</th>";
+        echo "<th>".$LANG["price"]."</th>";
+        echo "<th>".$LANG["edit"]."</th>";
         echo "</tr>";
         break;
     }
@@ -216,7 +223,7 @@ function showitems($array,$name,$shortcode,$maxitems,$price,$outputformat) {
                     case 'list':
                     echo "<b>" . $codeitems . ":</b>"  . $value['date'] . ' - ' . $name . ' usage: ' . $value['content'];              
                     if ($itemprice != 0) {
-                        echo ' - Difference with day before: ' . round($codemin,3) . '.';
+                        echo ' - '.$LANG["difference"] . round($codemin,3) . '.';
                         echo " [". $currency.": ".round($itemprice,2)."]";
                     }
                     echo " [ <a href=\"action.php?id=" .$item. "&action=edit\"><span class=\"icon small darkgray\" data-icon=\"7\"></span></a></td>";
@@ -233,17 +240,17 @@ function showitems($array,$name,$shortcode,$maxitems,$price,$outputformat) {
     }
     switch ($outputformat) {
         case 'list':
-        echo "Average difference: ". round(calculate_average($averageusage),2) . ".";
-        echo "Average price: ". $currency . round(calculate_average($averageprice),2) . ".";
+        echo "".$LANG["average"]." ".strtolower($LANG["difference"]).": ". round(calculate_average($averageusage),2) . ".";
+        echo "".$LANG["average"]." ".strtolower($LANG["price"]).": ". $currency . round(calculate_average($averageprice),2) . ".";
         break;
         
         default:
         echo "<tr>";
         echo "<td colspan=\"3\">";
-        echo "Average difference: ". round(calculate_average($averageusage),2);
+        echo "".$LANG["average"]." ".strtolower($LANG["difference"]).": ". round(calculate_average($averageusage),2);
         echo "</td>";
         echo "<td colspan=\"3\">";
-        echo "Average price: " . $currency . " " . round(calculate_average($averageprice),2);
+        echo "".$LANG["average"]." ".strtolower($LANG["price"]).": " . $currency . " " . round(calculate_average($averageprice),2);
         echo "</td>";
         echo "</tr>";
 
@@ -258,6 +265,7 @@ function showitems($array,$name,$shortcode,$maxitems,$price,$outputformat) {
 #via http://www.mdj.us/web-development/php-programming/calculating-the-median-average-values-of-an-array-with-php/
 # start median calculate function
 function calculate_median($arr) {
+    global $LANG;
     sort($arr);
     $count = count($arr); //total numbers in array
     $middleval = floor(($count-1)/2); // find the middle value, or the lowest middle value
@@ -275,7 +283,9 @@ function calculate_median($arr) {
 #via http://www.mdj.us/web-development/php-programming/calculating-the-median-average-values-of-an-array-with-php/
 # start average calculate
 function calculate_average($arr) {
+    global $LANG;
     $count = count($arr); //total numbers in array
+    $total=NULL;
     foreach ($arr as $value) {
         $total = $total + $value; // total value of array numbers
     }
@@ -286,6 +296,7 @@ function calculate_average($arr) {
 
 # start date function
 function createdatearray($json_a,$itemtype,$maand) {
+    global $LANG;
     global $currency;
     ${$itemtype . "month"} = array();
     ${$itemtype . "items"} = array();
@@ -310,11 +321,11 @@ function createdatearray($json_a,$itemtype,$maand) {
         echo "<h3>" . $maandnaam . "</h3>\n";
         echo "<table class=\"striped\">\n";
         echo "<tr>\n";
-        echo "<th>Day</th>\n";
-        echo "<th>Usage</th>\n";
-        echo "<th>Difference</th>\n";
-        echo "<th>Price</th>\n";
-        echo "<th>Edit/Delete</th>\n";
+        echo "<th>".$LANG["day"]."</th>\n";
+        echo "<th>".$LANG["usage"]."</th>\n";
+        echo "<th>".$LANG["difference"]."</th>\n";
+        echo "<th>".$LANG["price"]."</th>\n";
+        echo "<th>".$LANG["editdelete"]."</th>\n";
         echo "</tr>\n";
         $items=0;
         $lastcontent=0;
@@ -366,8 +377,8 @@ function createdatearray($json_a,$itemtype,$maand) {
         $lastelement=$lastelement["content"];
         $totaloftype=floatval($lastelement)-floatval($firstelement);
         reset(${$itemtype . "month"}[$maand]);
-        echo"<td colspan=\"2\">Total usage: " . round($totaloftype,3) . "</td>\n";
-        echo "<td colspan=\"2\">Total price: " . $currency . ": ".round($totalprice,2) . "</td>\n";
+        echo"<td colspan=\"2\">".$LANG["total"]." ".strtolower($LANG["usage"]).": " . round($totaloftype,3) . "</td>\n";
+        echo "<td colspan=\"2\">".$LANG["total"]." ".strtolower($LANG["price"]).": " . $currency . ": ".round($totalprice,2) . "</td>\n";
         echo "<td></td>";
         echo "</tr>";
         echo "</table>";
@@ -382,22 +393,22 @@ function createdatearray($json_a,$itemtype,$maand) {
 # start showform function
 
 function showinputform($actionpage) {
-
+    global $LANG;
     $vandaag=date('m-d-Y');
 
-    echo "<h3>Add Value</h3>\n";
+    echo "<h3>".$LANG["addvalue"]."</h3>\n";
     echo "<form name=\"edit\" action=\"". $actionpage ."\" method=\"GET\">\n";
     echo "<select name=\"type\">\n";
-    echo "<option value=\"NPP\">Normal Price power</option>\n";
-    echo "<option value=\"DPP\">Discount Price power</option>\n";
-    echo "<option value=\"GAS\">Gas</option>\n";
-    echo "<option value=\"H2O\">Water</option>\n";
+    echo "<option value=\"NPP\">".$LANG["npp"]."</option>\n";
+    echo "<option value=\"DPP\">".$LANG["dpp"]."</option>\n";
+    echo "<option value=\"GAS\">".$LANG["gas"]."</option>\n";
+    echo "<option value=\"H2O\">".$LANG["water"]."</option>\n";
     echo "</select>\n";
-    echo "  <input name=\"content\" type=\"text\" placeholder=\"Value\" ></input>\n";
+    echo "  <input name=\"content\" type=\"text\" placeholder=\"".$LANG["value"]."\" ></input>\n";
     echo "<input name=\"date\" type=\"text\" value=\"${vandaag}\"></input>\n";
     echo "<input type=\"hidden\" name=\"action\" value=\"add\"></input>\n";
     echo "&nbsp; &nbsp; ";
-    echo "<input type=\"submit\" name=\"submit\" value=\"Add Item\"></input>\n";
+    echo "<input type=\"submit\" name=\"submit\" value=\"".$LANG["additem"]."\"></input>\n";
     echo "</form>\n";
 }
 

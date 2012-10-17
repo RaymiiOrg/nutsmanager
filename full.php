@@ -32,27 +32,20 @@ $havewater = 0;
 include("functions.php");
 include("header.php");
 
-echo '<h1> NutsManager </h1>';
-?>
-<ul class="tabs center">
-	<li><a href="#npp">Normal Power</a></li>
-	<li><a href="#dpp">Discount Power</a></li>
-	<li><a href="#gas">Gas</a></li>
-	<li><a href="#h2o">Water</a></li>
-</ul>
-
-
-
-
-<?
-
+echo '<h1> '.$productname.' </h1>';
+echo '<ul class="tabs center">';
+echo '<li><a href="#npp">'.$LANG["npp"].'</a></li>';
+echo '<li><a href="#dpp">'.$LANG["dpp"].'</a></li>';
+echo '<li><a href="#gas">'.$LANG["gas"].'</a></li>';
+echo '<li><a href="#h2o">'.$LANG["water"].'</a></li>';
+echo "</ul>";
 
 if(is_array($json_a)) {		
 
 	
 	# start npp
 	echo "<div id=\"npp\" class=\"tab-content\">";
-	echo"<h2>Normal Price Power</h2>";
+	echo"<h2>".$LANG["npp"]."</h2>";
 
 	foreach ($json_a as $item => $value) {
 		if ($value['type'] == "NPP") {	
@@ -61,7 +54,7 @@ if(is_array($json_a)) {
 	}
 
 	if ($havenpp == 0) {
-		echo "No data to display yet. Please add it.";
+		echo "".$LANG["nodate"]."";
 
 	} else {
 
@@ -78,7 +71,7 @@ if(is_array($json_a)) {
 
 	# start dpp
 	echo "<div id=\"dpp\" class=\"tab-content\">";
-	echo"<h2>Discount Price Power</h2>";
+	echo"<h2>".$LANG["dpp"]."</h2>";
 
 	foreach ($json_a as $item => $value) {
 		if ($value['type'] == "DPP") {	
@@ -87,7 +80,7 @@ if(is_array($json_a)) {
 	}
 
 	if ($havedpp == 0) {
-		echo "No data to display yet. Please add it.";
+		echo "".$LANG["nodata"]."";
 
 	} else {
 
@@ -102,7 +95,7 @@ if(is_array($json_a)) {
 
 	# start gas
 	echo "<div id=\"gas\" class=\"tab-content\">";
-	echo"<h2>Gas</h2>";
+	echo"<h2>".$LANG["gas"]."</h2>";
 
 	foreach ($json_a as $item => $value) {
 		if ($value['type'] == "GAS") {	
@@ -111,7 +104,7 @@ if(is_array($json_a)) {
 	}
 
 	if ($havegas == 0) {
-		echo "No data to display yet. Please add it.";
+		echo "".$LANG["nodata"]."";
 
 	} else {
 
@@ -126,7 +119,7 @@ if(is_array($json_a)) {
 
 	# start water
 	echo "<div id=\"h2o\" class=\"tab-content\">";
-	echo"<h2>Water</h2>";
+	echo"<h2>".$LANG["water"]."</h2>";
 
 	foreach ($json_a as $item => $value) {
 		if ($value['type'] == "H2O") {	
@@ -135,7 +128,7 @@ if(is_array($json_a)) {
 	}
 
 	if ($haveh2o == 0) {
-		echo "No data to display yet. Please add it.";
+		echo "".$LANG["nodata"]."";
 
 	} else {
 
@@ -152,7 +145,7 @@ if(is_array($json_a)) {
 
 } else {
 		# no json array
-	echo "No items in file. Unknown error.";
+	echo "".$LANG["emptyjsonarray"]."";
 }
 
 ?>

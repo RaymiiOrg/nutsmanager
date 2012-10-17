@@ -8,6 +8,9 @@ It helps me to keep track of my power usage, and shows me on which days I use a 
 
 ## Changelog
 
+### v0.0.4
+- Program is now i18n compatible and has a Dutch and English translation.
+
 ### v0.0.3 
 - Full overview is now sorted by month.
 
@@ -37,6 +40,9 @@ It helps me to keep track of my power usage, and shows me on which days I use a 
   - (Or, *chmod 777 power.json* if you are lazy)
 - Change the price values for the power, gas and water in the *functions.php* file.
   - Make sure you use a dot (.) and not a comma (,), php doesn't like comma's.
+- Set the language in the *functions.php* file.
+  - For english: language.en.php.
+  - For dutch: language.nl.php.
 - Start adding the values every day.
 - ???
 - PROFIT!!!
