@@ -30,6 +30,7 @@ $LANG = array(
     "price" => "Prijs",
     "difference" => "Verschil",
     "average" => "Gemiddelde",
+    "average2" => "Gemiddeld",
     "day" => "Dag",
     "editdelete" => "Bewerken/Verwijderen",
     "help" => "Help",

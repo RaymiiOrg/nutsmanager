@@ -87,7 +87,7 @@ if (empty($_GET['action'])) {
 	#does the date already exists
 	$addfilter = array("type" => $type);
 	$filt_a=arrayFilter($json_a, $addfilter, true);
-	foreach ($filt_a as $item => $loopvalue) {
+	foreach ((array) $filt_a as $item => $loopvalue) {
 
 		if($loopvalue['date'] == $date) {
 				die($LANG["edateexist"]);

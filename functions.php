@@ -240,14 +240,14 @@ function showitems($array,$name,$shortcode,$maxitems,$price,$outputformat) {
     }
     switch ($outputformat) {
         case 'list':
-        echo "".$LANG["average"]." ".strtolower($LANG["difference"]).": ". round(calculate_average($averageusage),2) . ".";
+        echo "".$LANG["average2"]." ".strtolower($LANG["difference"]).": ". round(calculate_average($averageusage),2) . ".";
         echo "".$LANG["average"]." ".strtolower($LANG["price"]).": ". $currency . round(calculate_average($averageprice),2) . ".";
         break;
         
         default:
         echo "<tr>";
         echo "<td colspan=\"3\">";
-        echo "".$LANG["average"]." ".strtolower($LANG["difference"]).": ". round(calculate_average($averageusage),2);
+        echo "".$LANG["average2"]." ".strtolower($LANG["difference"]).": ". round(calculate_average($averageusage),2);
         echo "</td>";
         echo "<td colspan=\"3\">";
         echo "".$LANG["average"]." ".strtolower($LANG["price"]).": " . $currency . " " . round(calculate_average($averageprice),2);
