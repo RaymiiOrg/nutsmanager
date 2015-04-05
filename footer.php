@@ -1,5 +1,5 @@
 
-<div class="col_3">
+<div class="col-md-2">
 	<h2>Links</h2>
 	<p>
 		<a href="index.php"><?php echo $LANG["mainpage"]; ?></a><br />
@@ -16,10 +16,9 @@
 	<p>
 		<?php echo $LANG["infotext"]; ?>
 	</p>
-</div><!-- div col3 --> 
+</div>
 
-<!-- Footer -->
-<div class="col_12">
+<div class="footer col-md-10 col-md-offset-1">
 <hr />
 <?php echo $productname . " " . $productversion; ?> by Remy van Elst - <a href="https://raymii.org">Raymii.org</a>.
 </div>

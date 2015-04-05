@@ -1,6 +1,6 @@
 <?php
 
-// Copyright (c) 2012 Remy van Elst
+// Copyright (c) 2015 Remy van Elst
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
@@ -19,31 +19,27 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+$file = file_get_contents("power.json") or die("Cant open JSON file. Does it exist?.");
+$json_a = json_decode($file, true) or die("Cant decode JSON file. Is it a valid JSON file?");
 
-
-
-# First open the JSON file
-$file = file_get_contents("power.json") or die("Cant open JSON file. Does it exist? Error code x51.");
-#now check if it is a valid file
-$json_a = json_decode($file, true) or die("Cant decode JSON file. Is it a valid JSON file? Error code x61.");
-// $havedpp = 0;
-// $havepnpp = 0;
-// $havegas = 0;
-// $havewater = 0;
-
+include("config.php");
 include("functions.php");
 include("header.php");
+echo "    <div class='page-header'>";
+echo '      <h1> '.$productname.' </h1>';
+echo "    </div>";
+echo "  </div>";
+echo "</div>";
+echo "<div class='row'>";
+echo "<div class='col-md-7 col-md-offset-1'>";
 
-echo "<h1>NutsManager</h1>";
 
 ## Call the form function from the functions file.
 showinputform("action.php");
 
 if(is_array($json_a)) {		
 
-
-
-		# start npp
+	# start npp
 	echo "<div id='npp'>";
 	echo"<h2>".$LANG["npp"]."</h2>";
 
@@ -154,7 +150,7 @@ if(is_array($json_a)) {
 }
 
 ?>
-</div><!--col_9 -->
+</div>
 
 <?php 
 include("footer.php");

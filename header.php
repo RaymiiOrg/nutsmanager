@@ -29,14 +29,17 @@ $productversion = "v0.0.4";
 <title><?php echo $productname; ?> - Raymii.org</title>
 <meta charset="UTF-8">
 <meta name="description" content="" />
-<!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-<script type="text/javascript" src="js/jquery.min.js"></script>                                   
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<!--<script type="text/javascript" src="js/jquery.min.js"></script>-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <script type="text/javascript" src="js/jquery.flot.js"></script>                                   
-<script type="text/javascript" src="js/kickstart.js"></script>                                   
-<script type="text/javascript" src="js/prettify.js"></script>                                   
-<link rel="stylesheet" type="text/css" href="style.css" media="all" />
-<link rel="stylesheet" type="text/css" href="css/kickstart.css" media="all" /> 
+<!--<script type="text/javascript" src="js/prettify.js"></script>  -->
+<link href="//maxcdn.bootstrapcdn.com/bootswatch/3.3.4/cerulean/bootstrap.min.css" rel="stylesheet">
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 </head>
-<body><a id="top-of-page"></a><div id="wrap" class="clearfix">
-<div class="col_9">
-
+<a id="top-of-page"></a>
+  <div id='page-content-wrapper'>
+  <div class='container-fluid'>
+    <div class='row'>
+      <div class="col-md-10 col-md-offset-1">

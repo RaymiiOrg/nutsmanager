@@ -37,7 +37,7 @@ $LANG = array(
     "menu" => "Menu",
     "info" => "Info",
     "helptext" => "Datumformaat is: MM-DD-YYYY. De grafiek heeft tenminste 3 items nodig om goed weer te geven.",
-    "infotext" => 'Dit is een in PHP geschreven stroom/water/gasverbruiks bijhouder. Het gebruikt een JSON bestand als database (<a href="power.json">klik hier om deze te bekijken</a>). De grafische opmaak maakt gebruik van het <a href="http://99lime.com">HTML5 Kickstart framework van Joshua Gatcke.</a></p><hr /><p>Dit programma heeft een open source licentie en is te downloaden op <a href="http://raymii.org">Raymii.org</a> en is geschreven door Remy van Elst.',
+    "infotext" => 'Dit is een in PHP geschreven stroom/water/gasverbruiks bijhouder. Het gebruikt een JSON bestand als database (<a href="power.json">klik hier om deze te bekijken</a>). De grafische opmaak maakt gebruik van het <a href="http://getbootstrap.com/">Bootstrap framework.</a></p><hr /><p>Dit programma heeft een open source licentie, het is te downloaden op <a href="http://raymii.org">Raymii.org</a> de auteur is Remy van Elst.',
     "mainpage" => "Hoofdpagina",
     "monthlyoverview" => "Maandoverzicht",
     "additem" => "Item toevoegen",

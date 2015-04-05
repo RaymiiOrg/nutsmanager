@@ -37,7 +37,7 @@ $LANG = array(
     "menu" => "Menu",
     "info" => "Info",
     "helptext" => "Input format for dates is: MM-DD-YYYY. The graph needs at least 3 items to show the difference. With one item it will be empty.",
-    "infotext" => 'This is a power/gas/water usage tracker written in PHP. It uses a JSON text file for the values (<a href="power.json">click here to see it</a>) and the visual side is created with the <a href="http://99lime.com">excellent HTML5 Kickstart framework by Joshua Gatcke.</a></p><hr /><p>The script is available for download under an permissive open source license on <a href="http://raymii.org">Raymii.org</a> and was written by Remy van Elst.',
+    "infotext" => 'This is a power/gas/water usage tracker written in PHP. It uses a JSON text file for the values (<a href="power.json">click here to see it</a>) and the visual side is created with the <a href="http://getbootstrap.com/">Bootstrap framework.</a></p><hr /><p>The script is available for download under an permissive open source license on <a href="http://raymii.org">Raymii.org</a> and was written by Remy van Elst.',
     "mainpage" => "Main page",
     "monthlyoverview" => "Monthly overview",
     "additem" => "Add item",

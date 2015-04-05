@@ -20,31 +20,32 @@
 // THE SOFTWARE.
 
 
-# First open the JSON file
-$file = file_get_contents("power.json") or die("Cant open JSON file. Does it exist? Error code x51.");
-#now check if it is a valid file
-$json_a = json_decode($file, true) or die("Cant decode JSON file. Is it a valid JSON file? Error code x61.");
-$havecheappower = 0;
-$havepower = 0;
-$havegas = 0;
-$havewater = 0;
+$file = file_get_contents("power.json") or die("Cant open JSON file. Does it exist?");
+$json_a = json_decode($file, true) or die("Cant decode JSON file. Is it a valid JSON file?");
 
+include("config.php");
 include("functions.php");
 include("header.php");
+echo "    <div class='page-header'>";
+echo '      <h1> '.$productname.' </h1>';
+echo "    </div>";
+echo "  </div>";
+echo "</div>";
+echo "<div class='row'>";
+echo "<div class='col-md-8 col-md-offset-1'>";
 
-echo '<h1> '.$productname.' </h1>';
-echo '<ul class="tabs center">';
-echo '<li><a href="#npp">'.$LANG["npp"].'</a></li>';
-echo '<li><a href="#dpp">'.$LANG["dpp"].'</a></li>';
-echo '<li><a href="#gas">'.$LANG["gas"].'</a></li>';
-echo '<li><a href="#h2o">'.$LANG["water"].'</a></li>';
+echo '<ul class="nav nav-tabs">';
+echo '<li class="active"><a href="#npp" role="tab" data-toggle="tab">'.$LANG["npp"].'</a></li>';
+echo '<li><a href="#dpp" role="tab" data-toggle="tab">'.$LANG["dpp"].'</a></li>';
+echo '<li><a href="#gas" role="tab" data-toggle="tab">'.$LANG["gas"].'</a></li>';
+echo '<li><a href="#h2o" role="tab" data-toggle="tab">'.$LANG["water"].'</a></li>';
 echo "</ul>";
 
 if(is_array($json_a)) {		
 
-	
+echo '<div class="tab-content">';
 	# start npp
-	echo "<div id=\"npp\" class=\"tab-content\">";
+	echo '<div id="npp" class="tab-pane fade in active">';
 	echo"<h2>".$LANG["npp"]."</h2>";
 
 	foreach ($json_a as $item => $value) {
@@ -70,7 +71,7 @@ if(is_array($json_a)) {
 	# end npp
 
 	# start dpp
-	echo "<div id=\"dpp\" class=\"tab-content\">";
+	echo "<div id=\"dpp\" class=\"tab-pane fade\">";
 	echo"<h2>".$LANG["dpp"]."</h2>";
 
 	foreach ($json_a as $item => $value) {
@@ -94,7 +95,7 @@ if(is_array($json_a)) {
 
 
 	# start gas
-	echo "<div id=\"gas\" class=\"tab-content\">";
+	echo "<div id=\"gas\" class=\"tab-pane fade\">";
 	echo"<h2>".$LANG["gas"]."</h2>";
 
 	foreach ($json_a as $item => $value) {
@@ -118,7 +119,7 @@ if(is_array($json_a)) {
 	# end gas
 
 	# start water
-	echo "<div id=\"h2o\" class=\"tab-content\">";
+	echo "<div id=\"h2o\" class=\"tab-pane fade\">";
 	echo"<h2>".$LANG["water"]."</h2>";
 
 	foreach ($json_a as $item => $value) {
@@ -149,7 +150,8 @@ if(is_array($json_a)) {
 }
 
 ?>
-</div><!--col_9 -->
+</div>
+</div>
 
 <?php
 include("footer.php");

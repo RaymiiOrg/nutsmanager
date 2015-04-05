@@ -19,18 +19,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-# per kWh
-$NPPprice=0.22716;
-# per kWh
-$DPPprice=0.20556;
-# per m3
-$GASprice=0.64354;
-# per m3
-$H2Oprice=0.914;
-# price symbol/name
-$currency="EUR";
-
-require('language.en.php');
 
 
 //http://www.tek-tips.com/viewthread.cfm?qid=1568788
@@ -168,7 +156,7 @@ function showitems($array,$name,$shortcode,$maxitems,$price,$outputformat) {
         
         default:
             # Tables, yay!
-        echo "<table class=\"striped\">";
+        echo "<table class=\"table table-striped\">";
         echo "<tr>";
         echo "<th>#</th>";
         echo "<th>".$LANG["date"]."</th>";
@@ -213,10 +201,10 @@ function showitems($array,$name,$shortcode,$maxitems,$price,$outputformat) {
                     }
                     echo "<td>";
                                     #Edit
-                    echo "<a href=\"action.php?id=" .$item. "&action=edit\"><span class=\"icon small darkgray\" data-icon=\"7\"></span></a>";
+                    echo "<a href=\"action.php?id=" .$item. "&action=edit\"><span class='glyphicon glyphicon-edit' aria-hidden='true'></span></a>";
                     echo " - ";            
                         #Delete
-                    echo "<a href=\"action.php?id=" .$item. "&action=delete\"><span class=\"icon small darkgray\" data-icon=\"T\"></span></a>";
+                    echo "<a href=\"action.php?id=" .$item. "&action=delete\"><span class='glyphicon glyphicon-remove' aria-hidden='true'></span></a>";
                     echo "</tr>";
                     break;
 
@@ -226,8 +214,8 @@ function showitems($array,$name,$shortcode,$maxitems,$price,$outputformat) {
                         echo ' - '.$LANG["difference"] . round($codemin,3) . '.';
                         echo " [". $currency.": ".round($itemprice,2)."]";
                     }
-                    echo " [ <a href=\"action.php?id=" .$item. "&action=edit\"><span class=\"icon small darkgray\" data-icon=\"7\"></span></a></td>";
-                    echo " <a href=\"action.php?id=" .$item. "&action=delete\"><span class=\"icon small darkgray\" data-icon=\"T\"></span></a> ] \n\r";
+                    echo " [ <a href=\"action.php?id=" .$item. "&action=edit\"><span class='glyphicon glyphicon-edit' aria-hidden='true'></span></a>";
+                    echo " <a href=\"action.php?id=" .$item. "&action=delete\"><span class='glyphicon glyphicon-remove' aria-hidden='true'></span></a>";
                     echo "<br />";
                     break;
 
@@ -319,7 +307,7 @@ function createdatearray($json_a,$itemtype,$maand) {
     if (count(${$itemtype."month"}[$maand]) != 0) {
 
         echo "<h3>" . $maandnaam . "</h3>\n";
-        echo "<table class=\"striped\">\n";
+        echo "<table class=\"table table-striped\">\n";
         echo "<tr>\n";
         echo "<th>".$LANG["day"]."</th>\n";
         echo "<th>".$LANG["usage"]."</th>\n";
@@ -358,10 +346,12 @@ function createdatearray($json_a,$itemtype,$maand) {
                 echo "<td>".$currency.": " . round($itemprice,2) . "</td>\n";
                 echo "<td>";
                             #Edit
-                echo "<a href=\"action.php?id=" .$key. "&action=edit\"><span class=\"icon small darkgray\" data-icon=\"7\"></span></a>";
+                echo "<a href=\"action.php?id=" .$key. "&action=edit\"><span class='glyphicon glyphicon-edit' aria-hidden='true'></span></a>";
+
                 echo " - ";            
                 #Delete
-                echo "<a href=\"action.php?id=" .$key. "&action=delete\"><span class=\"icon small darkgray\" data-icon=\"T\"></span></a>";
+                echo "<a href=\"action.php?id=" .$key. "&action=delete\"><span class='glyphicon glyphicon-remove' aria-hidden='true'></span></a>";
+
 
                 $lastcontent=$value["content"];
                 $totalprice += $itemprice;
