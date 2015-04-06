@@ -1,118 +1,104 @@
 <?php
+/*
+    Copyright (C) 2015 Remy van Elst
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU Affero General Public License for more details.
+    You should have received a copy of the GNU Affero General Public License
+    along with this program. If not, see <http://www.gnu.org/licenses/>.
+*/
 
-// Copyright (c) 2012 Remy van Elst
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
+function arrayFilter($arrHaystack, $arrFilter, $boolStrict = false)
+{
+  if (!is_array($arrFilter)) {
+    $arrFilter = array($arrFilter);
+  }
+  if (!is_array($arrHaystack)) {
+    $arrHaystack = array($arrHaystack);
+  }
 
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
-
-
-
-//http://www.tek-tips.com/viewthread.cfm?qid=1568788
-function arrayFilter($arrHaystack, $arrFilter, $boolStrict = false) {
-    global $LANG;
-    if (!is_array($arrFilter)) $arrFilter = array($arrFilter);
-    if (!is_array($arrHaystack)) $arrHaystack = array($arrHaystack);
-
-    foreach ($arrHaystack as $strHKey => $objHValue)
-    {
-        if (is_array($objHValue))
-            $boolFound = arrayFilter($objHValue, $arrFilter, $boolStrict);
-        else
-        {
-            $boolFound=NULL;
-            $arrResult=NULL;
-            $strHKey = strtolower($strHKey);
-            $objHValue = strtolower($objHValue);
-            foreach ($arrFilter as $strFKey => $objFValue)
-            {
-                $strFKey = strtolower($strFKey);
-                $objFValue = strtolower($objFValue);
-
-                $boolMatch = (($strFKey == $strHKey) AND ($objFValue == $objHValue));
-
-                if ($boolMatch == 1)
-                    if ($boolStrict)
-                        unset($arrFilter[$strFKey]);
-                    else
-                        $arrFilter = array();
-
-                    if (count($arrFilter) == 0)
-                        return true;
-                }
-            }
-
-            if ($boolFound)
-                $arrResult[$strHKey] = $objHValue;
+  foreach ($arrHaystack as $strHKey => $objHValue) {
+    if (is_array($objHValue)) {
+      $boolFound = arrayFilter($objHValue, $arrFilter, $boolStrict);
+    } else {
+      $strHKey = strtolower($strHKey);
+      $objHValue = strtolower($objHValue);
+      foreach ($arrFilter as $strFKey => $objFValue) {
+        $strFKey = strtolower($strFKey);
+        $objFValue = strtolower($objFValue);
+        $boolMatch = (($strFKey == $strHKey) AND ($objFValue == $objHValue));
+        if ($boolMatch == 1) {
+          if ($boolStrict) {
+            unset($arrFilter[$strFKey]);
+          } else {
+            $arrFilter = array();
+          }
+        }     
+        if (count($arrFilter) == 0) {
+          return true;
         }
-
-        return $arrResult;    
+      }
     }
+        
+    if ($boolFound){
+      $arrResult[$strHKey] = $objHValue;
+    }
+  }
 
+  return $arrResult;    
+}
 
-    function makegraph($array,$shortcode,$color,$maxitems) {
+function makegraph($array,$shortcode,$color,$maxitems) {
+  global $LANG;
+  $arrFilter = array("type" => $shortcode);
+  $json_a = arrayFilter($array, $arrFilter, true);
+  ?>
+  <div id="<?php echo $shortcode; ?>-chart">
+    <div id="<?php echo $shortcode; ?>graph" style="width:500px;height:150px;"></div>
+    <script type="text/javascript">
+      $(function () {
+      <?php
+      $codeitems=1;
+      $lastcode=null;
+      $totalitems=count($json_a);
+      $start_loop=0;
+      if(floatval($totalitems) > floatval($maxitems)) {
+        $array_diff = floatval($totalitems) - floatval($maxitems);
+        $start_loop = $array_diff;
+      }
+      echo "var d2 = [";
+      foreach (array_slice($json_a, $start_loop) as $item => $value) {
+        if($codeitems < $maxitems+1) {
+          $day=date("D",strtotime($value['date'])); 
+          if($codeitems > 1) {
+            $codemin =  floatval($value['content']) - floatval($lastcode);
+          } else {
+            $codemin = 0;
+          }
+          if ($codeitems >= 2) {
+            echo "[" . $codeitems. ", " . $codemin . "], ";
+          }
 
-        global $LANG;
-        $arrFilter = array("type" => $shortcode);
-        $json_a=arrayFilter($array, $arrFilter, true);
+          $codeitems+=1;
+          $lastcode=$value['content'];
 
-        ?>
-        <div id="<?php echo $shortcode; ?>-chart">
-            <div id="<?php echo $shortcode; ?>graph" style="width:500px;height:150px;"></div>
-            <script type="text/javascript">
-            $(function () {
+        }
+      }
+      echo "];";
+      ?>  
+      $.plot($("#<?php echo $shortcode; ?>graph"), [ d2 ], {colors: ['<?php echo $color; ?>']});
+      });
+  </script>
+  <?php
 
-                <?php
-                $codeitems=1;
-                $lastcode=null;
-
-                $totalitems=count($json_a);
-                $start_loop=0;
-                if(floatval($totalitems) > floatval($maxitems)) {
-                    $array_diff = floatval($totalitems) - floatval($maxitems);
-                    $start_loop = $array_diff;
-                }
-                echo "var d2 = [";
-                foreach (array_slice($json_a, $start_loop) as $item => $value) {
-                    if($codeitems < $maxitems+1) {
-                        $day=date("D",strtotime($value['date'])); 
-                        if($codeitems > 1) {
-                            $codemin =  floatval($value['content']) - floatval($lastcode);
-                        } else {
-                            $codemin = 0;
-                        }
-                        if ($codeitems >= 2) {
-                            echo "[" . $codeitems. ", " . $codemin . "], ";
-                        }
-
-                        $codeitems+=1;
-                        $lastcode=$value['content'];
-
-                    }
-                }
-                echo "];";
-                ?>  
-                $.plot($("#<?php echo $shortcode; ?>graph"), [ d2 ], {colors: ['<?php echo $color; ?>']});
-            });
-</script>
-<?php
-
-echo "</div>";
-unset($json_a);
-unset($totalitems);
+  echo "</div>";
+  unset($json_a);
+  unset($totalitems);
 }
 # end makegraph function
 
@@ -204,7 +190,7 @@ function showitems($array,$name,$shortcode,$maxitems,$price,$outputformat) {
                     echo "<a href=\"action.php?id=" .$item. "&action=edit\"><span class='glyphicon glyphicon-edit' aria-hidden='true'></span></a>";
                     echo " - ";            
                         #Delete
-                    echo "<a href=\"action.php?id=" .$item. "&action=delete\"><span class='glyphicon glyphicon-remove' aria-hidden='true'></span></a>";
+                    echo "<a href=\"action.php?id=" .$item. "&action=delete\" onclick=\"if (!confirm('Are you sure you want to delete this item?')) return false;\"><span class='glyphicon glyphicon-remove' aria-hidden='true'></span></a>";
                     echo "</tr>";
                     break;
 
@@ -215,7 +201,7 @@ function showitems($array,$name,$shortcode,$maxitems,$price,$outputformat) {
                         echo " [". $currency.": ".round($itemprice,2)."]";
                     }
                     echo " [ <a href=\"action.php?id=" .$item. "&action=edit\"><span class='glyphicon glyphicon-edit' aria-hidden='true'></span></a>";
-                    echo " <a href=\"action.php?id=" .$item. "&action=delete\"><span class='glyphicon glyphicon-remove' aria-hidden='true'></span></a>";
+                    echo " <a href=\"action.php?id=" .$item. "&action=delete\" onclick=\"if (!confirm('Are you sure you want to delete this item?')) return false;\"><span class='glyphicon glyphicon-remove' aria-hidden='true'></span></a>";
                     echo "<br />";
                     break;
 
@@ -350,7 +336,7 @@ function createdatearray($json_a,$itemtype,$maand) {
 
                 echo " - ";            
                 #Delete
-                echo "<a href=\"action.php?id=" .$key. "&action=delete\"><span class='glyphicon glyphicon-remove' aria-hidden='true'></span></a>";
+                echo "<a href=\"action.php?id=" .$key. "&action=delete\" onclick=\"if (!confirm('Are you sure you want to delete this item?')) return false;\"><span class='glyphicon glyphicon-remove' aria-hidden='true'></span></a>";
 
 
                 $lastcontent=$value["content"];
@@ -403,5 +389,32 @@ function showinputform($actionpage) {
 }
 
 
+function gen_uuid() {
+  return sprintf( '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+    // 32 bits for "time_low"
+    mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ),
+
+    // 16 bits for "time_mid"
+    mt_rand( 0, 0xffff ),
+
+    // 16 bits for "time_hi_and_version",
+    // four most significant bits holds version number 4
+    mt_rand( 0, 0x0fff ) | 0x4000,
+
+    // 16 bits, 8 bits for "clk_seq_hi_res",
+    // 8 bits for "clk_seq_low",
+    // two most significant bits holds zero and one for variant DCE1.1
+    mt_rand( 0, 0x3fff ) | 0x8000,
+
+    // 48 bits for "node"
+    mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff )
+  );
+}
+
+function pre_dump($var) {
+  echo "<pre>";
+  var_dump($var);
+  echo "</pre>";
+}
 
 ?>

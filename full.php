@@ -1,38 +1,22 @@
 <?php
-
-// Copyright (c) 2012 Remy van Elst
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
-
-
-$file = file_get_contents("power.json") or die("Cant open JSON file. Does it exist?");
-$json_a = json_decode($file, true) or die("Cant decode JSON file. Is it a valid JSON file?");
+ob_start();
+/*
+	Copyright (C) 2015 Remy van Elst
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU Affero General Public License for more details.
+    You should have received a copy of the GNU Affero General Public License
+    along with this program. If not, see <http://www.gnu.org/licenses/>.
+*/
 
 include("config.php");
 include("functions.php");
 include("header.php");
-echo "    <div class='page-header'>";
-echo '      <h1> '.$productname.' </h1>';
-echo "    </div>";
-echo "  </div>";
-echo "</div>";
-echo "<div class='row'>";
-echo "<div class='col-md-8 col-md-offset-1'>";
 
 echo '<ul class="nav nav-tabs">';
 echo '<li class="active"><a href="#npp" role="tab" data-toggle="tab">'.$LANG["npp"].'</a></li>';

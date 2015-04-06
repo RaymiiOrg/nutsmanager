@@ -1,38 +1,23 @@
 <?php
 /*
-#Copyright (c) 2012 Remy van Elst
-#Permission is hereby granted, free of charge, to any person obtaining a copy
-#of this software and associated documentation files (the "Software"), to deal
-#in the Software without restriction, including without limitation the rights
-#to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-#copies of the Software, and to permit persons to whom the Software is
-#furnished to do so, subject to the following conditions:
-#
-#The above copyright notice and this permission notice shall be included in
-#all copies or substantial portions of the Software.
-#
-#THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-#IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-#FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-#AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-#LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-#OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-#THE SOFTWARE.
+	Copyright (C) 2015 Remy van Elst
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU Affero General Public License for more details.
+    You should have received a copy of the GNU Affero General Public License
+    along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-#JSON File database.
-$file = "power.json";
-#Check if PHP can open it.
-$jsonfile = file_get_contents($file) or die("Cannot open JSON file. Does it exist?");
-# Check if it is valid JSON.
-$json_a = json_decode($jsonfile, true) or die("Cannot decode JSON file. Is it valid?");
-
-#Include the header
+include("config.php");
 include("header.php");
 include("functions.php");
 
 
-#Check if we get an action
 if (empty($_GET['action'])) {
 	echo "".$LANG["noaction"]." \n<br /><a href=\"index.php\">".$LANG["goback"].".</a>";
 } elseif (isset($_GET['action']) && $_GET['action'] == 'edit' ) {
@@ -47,13 +32,17 @@ if (empty($_GET['action'])) {
 		#Is it a match, then show the edit form.
 		if ($item == $id) {
 			$found = 1;
+			echo $LANG[strtolower($value["type"])] . " for ";
+			echo htmlspecialchars($value["date"]) . " <br>(current value: <i>";
+			echo htmlspecialchars($value["content"]) . "</i>): <br><br>";
 			echo "<form name=\"edit\" action=\"action.php\" method=\"GET\">";
 			echo "<input name=\"content\" type=\"text\" value=\"";
 			echo $value['content'];
 			echo "\"></input>";
 			echo "<input type=\"hidden\" name=\"id\" value=\"".  $id ."\"></input>";		
-			echo "<input type=\"hidden\" name=\"action\" value=\"update\"></input>";
-			echo "<input type=\"submit\" name=\"submit\" value=\"Submit\"></input>";
+			echo "<input type=\"hidden\" name=\"action\" value=\"update\"></input> ";
+			echo "<input type=\"submit\" name=\"submit\" value=\"Submit\"></input> ";
+			echo "<input type=\"button\" value=\"Back\" onClick=\"history.go(-1);return true;\">";
 			echo "</form>";
 			echo "<p />";
 		}
@@ -66,8 +55,6 @@ if (empty($_GET['action'])) {
 	
 }  elseif (isset($_GET['submit']) && $_GET['action'] == 'add' && !empty($_GET['content']) && !empty($_GET['type']) && !empty($_GET['date'])) {
 	#User wants to add a item.
-	#I use a sub-random ID for the items. It consists out of the EPOCH for the item-date plus some randomness. This is the randomness.
-	$id5=substr(md5(rand()), 0, 20);
 	$value=htmlspecialchars($_GET['content']);
 	$itemcontent=htmlspecialchars($_GET['content']);
 	$type=htmlspecialchars($_GET['type']);
@@ -108,8 +95,8 @@ if (empty($_GET['action'])) {
 	#epoch of item date
 	$dateepoch=strtotime($datecomma);
 	#real ID
-	$id=$dateepoch . "x000" . $id5;
-	$current = file_get_contents($file);
+	$id = gen_uuid();
+	$current = file_get_contents($jsonfile);
 	$current = json_decode($current, TRUE);
 	$json_a = array($id => array("content" => $value, "date" => $date, "type" => $type));
 	
@@ -123,14 +110,10 @@ if (empty($_GET['action'])) {
 	#If the sorting goes wrong, the graphs are wrong.
 	ksort($current);
 	$current=json_encode($current);	
-	if(file_put_contents($file, $current, LOCK_EX)) {
+	if(file_put_contents($jsonfile, $current, LOCK_EX)) {
+		header("Location: index.php");
 		echo $LANG["itemadded"]."<br /> \n";
 		echo"<a href=\"index.php\">".$LANG["noredirect"]."</a>";
-		?>
-		<script type="text/javascript">
-		window.location = "index.php"
-		</script>
-		<?php
 	} else {
 		echo $LANG["efailjsonwrite"];
 	}
@@ -148,21 +131,17 @@ if (empty($_GET['action'])) {
 		if ($item == $id) {
 			$found = 1;
 
-			$current = file_get_contents($file);
+			$current = file_get_contents($jsonfile);
 			$current = json_decode($current, TRUE);
 			$json_a = array($id => array("content" => $replacedvalue));
 
 			$replaced = array_replace_recursive($current, $json_a);
 			$replaced = json_encode($replaced);
 			
-			if(file_put_contents($file, $replaced, LOCK_EX)) {
+			if(file_put_contents($jsonfile, $replaced, LOCK_EX)) {
+				header("Location: index.php");
 				echo $LANG["actionsuccess"]."<br /> \n";
 				echo"<a href=\"index.php\">".$LANG["noredirect"]."</a>";
-				?>
-				<script type="text/javascript">
-				window.location = "index.php"
-				</script>
-				<?php
 			} else {
 				echo $LANG["efailjsonwrite"];
 			}
@@ -178,19 +157,15 @@ if (empty($_GET['action'])) {
 	foreach ($json_a as $item => $value) {
 		if ($item == $id) {
 			$found = 1;
-			$current = file_get_contents($file);
+			$current = file_get_contents($jsonfile);
 			$current = json_decode($current, TRUE);
 			unset($current[$id]);
 			$deleted = json_encode($current);
 			ksort($deleted);		
-			if(file_put_contents($file, $deleted, LOCK_EX)) {
+			if(file_put_contents($jsonfile, $deleted, LOCK_EX)) {
+				header("Location: index.php");
 				echo $LANG["actionsuccess"]."<br /> \n";
 				echo"<a href=\"index.php\">".$LANG["noredirect"]."</a>";
-				?>
-				<script type="text/javascript">
-				window.location = "index.php"
-				</script>
-				<?php
 			} else {
 				echo $LANG["efailjsonwrite"];
 				}

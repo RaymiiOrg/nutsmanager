@@ -1,152 +1,116 @@
 <?php
+ob_start();
+/*
+    Copyright (C) 2015 Remy van Elst
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU Affero General Public License for more details.
+    You should have received a copy of the GNU Affero General Public License
+    along with this program. If not, see <http://www.gnu.org/licenses/>.
+*/
 
-// Copyright (c) 2015 Remy van Elst
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
-
-$file = file_get_contents("power.json") or die("Cant open JSON file. Does it exist?.");
-$json_a = json_decode($file, true) or die("Cant decode JSON file. Is it a valid JSON file?");
 
 include("config.php");
 include("functions.php");
 include("header.php");
-echo "    <div class='page-header'>";
-echo '      <h1> '.$productname.' </h1>';
-echo "    </div>";
-echo "  </div>";
-echo "</div>";
-echo "<div class='row'>";
-echo "<div class='col-md-7 col-md-offset-1'>";
+
 
 
 ## Call the form function from the functions file.
 showinputform("action.php");
 
-if(is_array($json_a)) {		
+if(is_array($json_a)) {   
 
-	# start npp
-	echo "<div id='npp'>";
-	echo"<h2>".$LANG["npp"]."</h2>";
+  # start npp
+  echo "<div id='npp'>";
+  echo"<h2>".$LANG["npp"]."</h2>";
 
-	foreach ((array) $json_a as $item => $value) {
-		if ($value['type'] == "NPP") {	
-			$havenpp=1;
-		}
-	}
+  foreach ((array) $json_a as $item => $value) {
+    if ($value['type'] == "NPP") {  
+      $havenpp += 1;
+    }
+  }
 
-	if ($havenpp == 0) {
-		echo $LANG["nodatatograph"];
+  if ($havenpp == 0) {
+    echo $LANG["nodatatograph"];
+  } else {
+    if ($havenpp >= 3) {
+      makegraph($json_a,"NPP","yellow",11);
+    }
+    showitems($json_a,$LANG["npp"],"NPP",11,$NPPprice,"");
+  }
+  echo "</div>";
+  # end npp
 
-	} else {
-		
-		#echo "<h3>Graph</h3>";
-		makegraph($json_a,"NPP","yellow",11);
+  # start dpp
+  echo "<div id='dpp'>";
+  echo"<h2>".$LANG["dpp"]."</h2>";
 
-		#echo "<h3>Items</h3>";
-		showitems($json_a,$LANG["npp"],"NPP",11,$NPPprice,"");
+  foreach ((array) $json_a as $item => $value) {
+    if ($value['type'] == "DPP") {  
+      $havedpp += 1;
+    }
+  }
 
-	}
-	echo "</div>";
-	# end npp
+  if ($havedpp == 0) {
+    echo $LANG["nodatatograph"];
+  } else {
+    if ($havedpp >= 3) {
+      makegraph($json_a,"DPP","green",11);
+    }
+    showitems($json_a,$LANG["dpp"],"DPP",11,$DPPprice,"");
+  }
+  echo "</div>";
+  # end dpp
 
-		# start dpp
-	echo "<div id='dpp'>";
-	echo"<h2>".$LANG["dpp"]."</h2>";
+  # start gas
+  echo "<div id='gas'>";
+  echo"<h2>".$LANG["gas"]."</h2>";
 
-	foreach ((array) $json_a as $item => $value) {
-		if ($value['type'] == "DPP") {	
-			$havedpp=1;
-		}
-	}
+  foreach ((array) $json_a as $item => $value) {
+    if ($value['type'] == "GAS") {  
+      $havegas += 1;
+    }
+  }
 
-	if ($havedpp == 0) {
-		echo $LANG["nodatatograph"];
+  if ($havegas == 0) {
+    echo $LANG["nodatatograph"];
+  } else {
+    if ($havegas >= 3) {
+      makegraph($json_a,"GAS","purple",11);
+    }
+    showitems($json_a,$LANG["gas"],"GAS",11,$GASprice,"");
+  }
+  echo "</div>";
+  # end gas
 
-	} else {
+  # start water
+  echo '<div id="water">';
+  echo"<h2>".$LANG["water"]."</h2>";
 
+  foreach ((array) $json_a as $item => $value) {
+    if ($value['type'] == "H2O") {  
+      $havewater += 1;
+    }
+  }
 
-		#echo "<h3>Graph</h3>";
-		makegraph($json_a,"DPP","green",11);
-
-		#echo "<h3>Items</h3>";
-		showitems($json_a,$LANG["dpp"],"DPP",11,$DPPprice,"");
-
-
-	}
-	echo "</div>";
-	# end dpp
-
-
-		# start gas
-	echo "<div id='gas'>";
-	echo"<h2>".$LANG["gas"]."</h2>";
-
-	foreach ((array) $json_a as $item => $value) {
-		if ($value['type'] == "GAS") {	
-			$havegas=1;
-		}
-	}
-
-	if ($havegas == 0) {
-		echo $LANG["nodatatograph"];
-
-	} else {
-
-
-		#echo "<h3>Graph</h3>";
-		makegraph($json_a,"GAS","purple",11);
-
-		#echo "<h3>Items</h3>";
-		showitems($json_a,$LANG["gas"],"GAS",11,$GASprice,"");
-
-
-
-	}
-	echo "</div>";
-	# end gas
-
-	# start water
-	echo '<div id="water">';
-	echo"<h2>".$LANG["water"]."</h2>";
-
-	foreach ((array) $json_a as $item => $value) {
-		if ($value['type'] == "H2O") {	
-			$havewater=1;
-		}
-	}
-
-	if ($havewater == 0) {
-		echo $LANG["nodatatograph"];
-
-	} else {
-
-		#echo "<h3>Graph</h3>";
-		makegraph($json_a,"H2O","cyan",11);
-
-		#echo "<h3>Items</h3>";
-		showitems($json_a,$LANG["water"],"H2O",11,$H2Oprice,"");
-
-	} 
-	echo "</div>";
-# END WATER
+  if ($havewater == 0) {
+    echo $LANG["nodatatograph"];
+  } else {
+    if ($havewater >= 3) {
+      makegraph($json_a,"H2O","cyan",11);
+    }
+    showitems($json_a,$LANG["water"],"H2O",11,$H2Oprice,"");
+  } 
+  echo "</div>";
+  # end water
 } else {
-		# no json array
-	echo $LANG["nodata"];
+  echo $LANG["nodata"];
 }
 
 ?>

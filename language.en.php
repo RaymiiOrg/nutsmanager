@@ -1,23 +1,17 @@
 <?php 
-// Copyright (c) 2012 Remy van Elst
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
-
+/*
+    Copyright (C) 2015 Remy van Elst
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU Affero General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU Affero General Public License for more details.
+    You should have received a copy of the GNU Affero General Public License
+    along with this program. If not, see <http://www.gnu.org/licenses/>.
+*/
 $LANG = array(
     "addvalue" => "Add value",
     "npp" => "Normal price power",
@@ -54,12 +48,12 @@ $LANG = array(
     "etypenotvalid" => "Error: The type you gave is not valid. Error code x62.",
     "actionsuccess" => "The action completed without errors.",
     "noredirect" => "You will now be redirected to the homepage. If that does not happen, please click here.",
-    "efailjsonwrite" => "Failure. The item could not be added. Please check if the JSON database file exists and is writable. Code x41",
+    "efailjsonwrite" => "Failure. The item could not be added. Please check if the JSON database file exists and is writable.",
     "eitemnotfound" => "Error: The item was not found. Please go back and try again.",
     "enovalidaction" => "Error: the action you want me to to is not valid. ",
     "nodatatograph" => "No data to graph or display yet. Please add it.",
-    "" => "",
-    "" => "",
+    "prices" => "Prices",
+    "pricestext" => "Current prices:<br><ul><li>Power <sup>high kWh</sup>: " . $currency . " " . $NPPprice . "</li><li>Power <sup>low kWh</sup>: " . $currency . " " . $DPPprice . "</li><li>Gas <sup>m3</sup>: " . $currency . " " . $GASprice . "</li><li>Water <sup>m3</sup>: " . $currency . " " . $H2Oprice . "</li></ul>",
     "" => "",
     "" => ""
     );
