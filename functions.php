@@ -301,7 +301,9 @@ function createdatearray($json_a,$itemtype,$maand) {
     }
 
     for ($i=0; $i < count(${$itemtype . "items"}); $i++) { 
-        $idate=date('n',strtotime(str_replace('-', '/',${$itemtype . "items"}[$i]["date"])));
+        $date = ${$itemtype . "items"}[$i]["date"];
+        $dt = new DateTime("@$date");
+        $idate = $dt->format('n');
         ${$itemtype . "month"}[$idate][${$itemtype . "items"}["$i"]["ID"]] = array("date" => ${$itemtype ."items"}[$i]["date"], "content" => ${$itemtype ."items"}[$i]["content"]);
     }
 
