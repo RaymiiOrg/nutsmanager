@@ -111,6 +111,16 @@ function showitems($array,$name,$shortcode,$maxitems,$price,$outputformat) {
     #Filter the json file array with the above filter (filter on type $shortcode)
     $json_a=arrayFilter($array, $arrFilter, true);
 
+
+    uasort($json_a, function ($i, $j) {
+      $a = $i['date'];
+      $b = $j['date'];
+      if ($a == $b) return 0;
+      elseif ($a > $b) return 1;
+      else return -1;
+    });
+    
+
     #Define 2 empty arrays for average usage and average price
     $averageusage = array('');
     $averageprice = array('');
@@ -119,8 +129,6 @@ function showitems($array,$name,$shortcode,$maxitems,$price,$outputformat) {
     $lastcode=null;
     $totalitems=count($json_a);
     
-
-
     #Set the normal start of the loop on the first item in the array
     $start_loop=0;
     #If we define a maximum number of items, then make sure the array loop and such start at that position
@@ -153,7 +161,7 @@ function showitems($array,$name,$shortcode,$maxitems,$price,$outputformat) {
         echo "</tr>";
         break;
     }
-
+    
     foreach (array_slice($json_a, $start_loop) as $item => $value) {
         if ($value['type'] == $shortcode) { 
             if($codeitems < $maxitems+1) {
@@ -172,7 +180,9 @@ function showitems($array,$name,$shortcode,$maxitems,$price,$outputformat) {
                     default:
                     echo "<tr>";
                     echo "<td>".$codeitems."</td>";
-                    echo "<td>".date('D d M Y',strtotime(str_replace('-', '/',$value["date"])))."</td>";
+                    $date = $value['date'];
+                    $dt = new DateTime("@$date");
+                    echo "<td>". $dt->format('D d M Y ') ."</td>";
                     echo "<td>".$value['content']."</td>";
                     if ($itemprice != 0) {
                                     #Difference
@@ -195,7 +205,9 @@ function showitems($array,$name,$shortcode,$maxitems,$price,$outputformat) {
                     break;
 
                     case 'list':
-                    echo "<b>" . $codeitems . ":</b>"  . $value['date'] . ' - ' . $name . ' usage: ' . $value['content'];              
+                    $date = $value['date'];
+                    $dt = new DateTime("@$date");
+                    echo "<b>" . $codeitems . ":</b>"  . $dt->format('D d M Y ') . ' - ' . $name . ' usage: ' . $value['content'];              
                     if ($itemprice != 0) {
                         echo ' - '.$LANG["difference"] . round($codemin,3) . '.';
                         echo " [". $currency.": ".round($itemprice,2)."]";
@@ -274,6 +286,14 @@ function createdatearray($json_a,$itemtype,$maand) {
     global $currency;
     ${$itemtype . "month"} = array();
     ${$itemtype . "items"} = array();
+    
+    uasort($json_a, function ($i, $j) {
+      $a = $i['date'];
+      $b = $j['date'];
+      if ($a == $b) return 0;
+      elseif ($a > $b) return 1;
+      else return -1;
+    });
     foreach ($json_a as $item => $itemarray) {
         if ($itemarray["type"] == strtoupper($itemtype)) {
             ${$itemtype . "items"}[] = array("content" => $itemarray["content"], "date" => $itemarray["date"], "ID" => $item);
@@ -291,7 +311,6 @@ function createdatearray($json_a,$itemtype,$maand) {
     ksort(${$itemtype."month"});
 
     if (count(${$itemtype."month"}[$maand]) != 0) {
-
         echo "<h3>" . $maandnaam . "</h3>\n";
         echo "<table class=\"table table-striped\">\n";
         echo "<tr>\n";
@@ -317,7 +336,10 @@ function createdatearray($json_a,$itemtype,$maand) {
                 
                 echo "<tr>\n";
                 echo "<td>\n";
-                echo date('l',strtotime(str_replace('-', '/',$value["date"]))) . " " . date('d',strtotime(str_replace('-', '/',$value["date"]))) . " " . date('M',strtotime(str_replace('-', '/',$value["date"])));
+                $date = $value['date'];
+                $dt = new DateTime("@$date");
+                echo $dt->format('D d M Y ');
+                //echo date('l',strtotime(str_replace('-', '/',$value["date"]))) . " " . date('d',strtotime(str_replace('-', '/',$value["date"]))) . " " . date('M',strtotime(str_replace('-', '/',$value["date"])));
                 echo "</td>\n";
                 echo "<td>" . $value["content"] . "</td>\n";
 

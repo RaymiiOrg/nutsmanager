@@ -33,5 +33,6 @@ $productname = "NutsManager";
 $productversion = "v0.0.5";
 
 require('language.en.php');
+date_default_timezone_set('UTC');
 
 ?>

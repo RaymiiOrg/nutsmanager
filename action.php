@@ -98,7 +98,7 @@ if (empty($_GET['action'])) {
 	$id = gen_uuid();
 	$current = file_get_contents($jsonfile);
 	$current = json_decode($current, TRUE);
-	$json_a = array($id => array("content" => $value, "date" => $date, "type" => $type));
+	$json_a = array($id => array("content" => $value, "date" => $dateepoch, "type" => $type));
 	
 	if(is_array($current)) {
 		# why array merge?
@@ -121,7 +121,7 @@ if (empty($_GET['action'])) {
 #update value
 	$id=htmlspecialchars($_GET['id']);
 	$replacedvalue=htmlspecialchars($_GET['content']);
-	#Time for some falidation..
+	#Time for some validation..
 	#We only want numeric shizzle, we cannot graph text	
 	if(!is_numeric($replacedvalue)) {
 		die($LANG["enumeric"]);
