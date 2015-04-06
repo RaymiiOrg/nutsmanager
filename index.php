@@ -28,7 +28,7 @@ if(is_array($json_a)) {
 
   # start npp
   echo "<div id='npp'>";
-  echo"<h2>".$LANG["npp"]."</h2>";
+  echo"<h2><span class=\"glyphicon glyphicon-flash\"></span> ".$LANG["npp"]."</h2>";
 
   foreach ((array) $json_a as $item => $value) {
     if ($value['type'] == "NPP") {  
@@ -49,7 +49,7 @@ if(is_array($json_a)) {
 
   # start dpp
   echo "<div id='dpp'>";
-  echo"<h2>".$LANG["dpp"]."</h2>";
+  echo"<h2><span class=\"glyphicon glyphicon-flash\"></span> ".$LANG["dpp"]."</h2>";
 
   foreach ((array) $json_a as $item => $value) {
     if ($value['type'] == "DPP") {  
@@ -70,7 +70,7 @@ if(is_array($json_a)) {
 
   # start gas
   echo "<div id='gas'>";
-  echo"<h2>".$LANG["gas"]."</h2>";
+  echo"<h2><span class=\"glyphicon glyphicon-fire\"></span> ".$LANG["gas"]."</h2>";
 
   foreach ((array) $json_a as $item => $value) {
     if ($value['type'] == "GAS") {  
@@ -91,7 +91,7 @@ if(is_array($json_a)) {
 
   # start water
   echo '<div id="water">';
-  echo"<h2>".$LANG["water"]."</h2>";
+  echo"<h2><span class=\"glyphicon glyphicon-tint\"></span> ".$LANG["water"]."</h2>";
 
   foreach ((array) $json_a as $item => $value) {
     if ($value['type'] == "H2O") {  

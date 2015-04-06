@@ -27,9 +27,9 @@ $json_a = json_decode($file, true) or die("Cant decode JSON file. Is it a valid 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <script type="text/javascript" src="js/jquery.min.js"></script>
-<script type="text/javascript" src="js/jquery.flot.js"></script>                                   
+<script type="text/javascript" src="js/jquery.flot.js"></script>
+<script type="text/javascript" src="js/tabs.js"></script>
 <link href="css/bootstrap.min.css" rel="stylesheet">
-<script type=text/javascript" src="js/bootstrap.min.js"></script>
 </head>
 <a id="top-of-page"></a>
   <div id='page-content-wrapper'>
