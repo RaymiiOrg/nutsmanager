@@ -30,11 +30,11 @@ $currency="EUR";
 
 
 $productname = "NutsManager";
-$productversion = "v0.0.5";
+$productversion = "v0.0.6";
 
 
 // Do not edit
-require('language.en.php');
+require('language.nl.php');
 date_default_timezone_set('UTC');
 
 error_reporting(E_ALL & ~E_NOTICE);

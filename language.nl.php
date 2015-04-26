@@ -57,7 +57,7 @@ $LANG = array(
     "prices" => "Prijzen",
     "pricestext" => "Huidige prijzen:<br><ul><li>Stroom <sup>hoog kWh</sup>: " . $currency . " " . $NPPprice . "</li><li>Stroom <sup>laag kWh</sup>: " . $currency . " " . $DPPprice . "</li><li>Gas <sup>m3</sup>: " . $currency . " " . $GASprice . "</li><li>Water <sup>m3</sup>: " . $currency . " " . $H2Oprice . "</li></ul>",
     "downloadcsv" => "CSV Export",
-    "" => "",
+    "nppdppoverlay" => "Hoog/Laagtarief vergelijking",
     "" => "",
     "" => ""
     );

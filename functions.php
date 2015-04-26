@@ -13,8 +13,9 @@
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-function arrayFilter($arrHaystack, $arrFilter, $boolStrict = false)
-{
+function arrayFilter($arrHaystack, $arrFilter, $boolStrict = false) {
+  $old_error_reporting = error_reporting(0); 
+  error_reporting(E_ALL & ~E_NOTICE);
   if (!is_array($arrFilter)) {
     $arrFilter = array($arrFilter);
   }
@@ -49,7 +50,7 @@ function arrayFilter($arrHaystack, $arrFilter, $boolStrict = false)
       $arrResult[$strHKey] = $objHValue;
     }
   }
-
+  error_reporting($old_error_reporting);
   return $arrResult;    
 }
 
@@ -57,12 +58,75 @@ function makegraph($array,$shortcode,$color,$maxitems) {
   global $LANG;
   $arrFilter = array("type" => $shortcode);
   $json_a = arrayFilter($array, $arrFilter, true);
-  ?>
-  <div id="<?php echo $shortcode; ?>-chart">
-    <div id="<?php echo $shortcode; ?>graph" style="width:500px;height:150px;"></div>
-    <script type="text/javascript">
-      $(function () {
-      <?php
+  uasort($json_a, function ($i, $j) {
+    $a = $i['date'];
+    $b = $j['date'];
+    if ($a == $b) return 0;
+    elseif ($a > $b) return 1;
+    else return -1;
+  });
+  echo "<div id=\"" . $shortcode . "-chart\">\n";
+  echo "<div id=\"" . $shortcode . "graph\" style='width:600px;height:200px;'></div>\n";
+  echo "<script type='text/javascript'>\n";
+  echo "$(function () {\n";
+  $codeitems=1;
+  $lastcode=null;
+  $totalitems=count($json_a);
+  $start_loop=0;
+  if(floatval($totalitems) > floatval($maxitems)) {
+    $array_diff = floatval($totalitems) - floatval($maxitems);
+    $start_loop = $array_diff;
+  }
+  echo "var d2 = [";
+  foreach (array_slice($json_a, $start_loop) as $item => $value) {
+    if($codeitems < $maxitems+1) {
+      $date = $value['date'];
+      $dt = new DateTime("@$date");
+      if($codeitems > 1) {
+        $codemin =  floatval($value['content']) - floatval($lastcode);
+      } else {
+        $codemin = 0;
+      }
+      if ($codeitems >= 2) {
+        echo "[" . $dt->format('z') . ", " . $codemin . "], \n";
+      }
+      $codeitems+=1;
+      $lastcode=$value['content'];
+    }
+  }
+  echo "];\n";
+  echo "$.plot(\n";
+  echo "$(\"#" . $shortcode ."graph\"), \n";
+  echo " [ d2 ], {\n";
+  echo "colors: ['". $color ."'], \n";
+  echo "lines: {show: true},\n";
+  echo "points: {show: true}\n";
+  echo "});\n";
+  echo "});\n";
+  echo "</script>\n";
+  echo "</div>";
+  unset($json_a);
+  unset($totalitems);
+}
+# end makegraph function
+
+
+function makeoverlaygraph($array,$shortcodes,$legends,$colors,$maxitems) {
+  echo "<div id=\"" . implode("-", $shortcodes) . "-chart\">\n";
+  echo "<div id=\"" . implode("-", $shortcodes) . "graph\" style='width:600px;height:200px;'></div>\n";
+  echo "<script type='text/javascript'>\n";
+  echo "$(function () {\n";
+
+  foreach ($shortcodes as $key => $shortcode) {
+      $arrFilter = array("type" => $shortcode);
+      $json_a = arrayFilter($array, $arrFilter, true);
+      uasort($json_a, function ($i, $j) {
+        $a = $i['date'];
+        $b = $j['date'];
+        if ($a == $b) return 0;
+        elseif ($a > $b) return 1;
+        else return -1;
+      });
       $codeitems=1;
       $lastcode=null;
       $totalitems=count($json_a);
@@ -71,36 +135,53 @@ function makegraph($array,$shortcode,$color,$maxitems) {
         $array_diff = floatval($totalitems) - floatval($maxitems);
         $start_loop = $array_diff;
       }
-      echo "var d2 = [";
+      echo "var d" . $key . " = [\n";
       foreach (array_slice($json_a, $start_loop) as $item => $value) {
         if($codeitems < $maxitems+1) {
-          $day=date("D",strtotime($value['date'])); 
+          $date = $value['date'];
+          $dt = new DateTime("@$date");
           if($codeitems > 1) {
             $codemin =  floatval($value['content']) - floatval($lastcode);
           } else {
             $codemin = 0;
           }
           if ($codeitems >= 2) {
-            echo "[" . $codeitems. ", " . $codemin . "], ";
+            echo "[\"" . $dt->format('z') . "\", " . floatval($codemin) . "]";
+            if ($codeitems == $maxitems) {
+              echo "\n";
+            } else {
+              echo ",\n";
+            }
           }
-
           $codeitems+=1;
           $lastcode=$value['content'];
-
         }
       }
-      echo "];";
-      ?>  
-      $.plot($("#<?php echo $shortcode; ?>graph"), [ d2 ], {colors: ['<?php echo $color; ?>']});
-      });
-  </script>
-  <?php
-
+      echo "];\n";
+    } 
+      echo "\n$.plot(\n";
+      echo "  $(\"#" . implode("-", $shortcodes) . "graph\"),\n"; 
+      echo "  [\n";
+        foreach ($shortcodes as $key => $shortcode) {
+          echo "{\n";
+          echo "  label: \" " . $legends[$key] . "\",\n";
+          echo "  data: d" . $key . ", \n";
+          echo "  color: ['" . $colors[$key] . "'],\n";
+          echo "  lines: {show: true},\n";
+          echo "  points: {show: true}\n";
+          echo "}";
+          if ($key != count($shortcodes) - 1) {
+            echo ",";
+          }
+        }
+    echo "]);\n";
+    echo "});\n";
+  echo "</script>";
   echo "</div>";
   unset($json_a);
   unset($totalitems);
 }
-# end makegraph function
+# end makeoverlaygraph function
 
 function showitems($array,$name,$shortcode,$maxitems,$price,$outputformat) {
     global $LANG;
@@ -110,8 +191,6 @@ function showitems($array,$name,$shortcode,$maxitems,$price,$outputformat) {
     $arrFilter = array("type" => $shortcode);
     #Filter the json file array with the above filter (filter on type $shortcode)
     $json_a=arrayFilter($array, $arrFilter, true);
-
-
     uasort($json_a, function ($i, $j) {
       $a = $i['date'];
       $b = $j['date'];
@@ -120,7 +199,6 @@ function showitems($array,$name,$shortcode,$maxitems,$price,$outputformat) {
       else return -1;
     });
     
-
     #Define 2 empty arrays for average usage and average price
     $averageusage = array('');
     $averageprice = array('');
@@ -179,11 +257,11 @@ function showitems($array,$name,$shortcode,$maxitems,$price,$outputformat) {
                 switch ($outputformat) {
                     default:
                     echo "<tr>";
-                    echo "<td>".$codeitems."</td>";
                     $date = $value['date'];
                     $dt = new DateTime("@$date");
-                    echo "<td>". $dt->format('D d M Y ') ."</td>";
-                    echo "<td>".$value['content']."</td>";
+                    echo "<td>" . $dt->format('z') . "</td>";
+                    echo "<td>" . $dt->format('D d M Y ') . "</td>";
+                    echo "<td>" . $value['content'] . "</td>";
                     if ($itemprice != 0) {
                                     #Difference
                         echo "<td>" . round($codemin,3) . '</td>';
@@ -452,23 +530,35 @@ function download_send_headers($filename) {
     header("Content-Transfer-Encoding: binary");
 }
 
-function array2csv(array &$array) {
-   if (count($array) == 0) {
-     return null;
-   }
-   ob_start();
-   $df = fopen("php://output", 'w');
-   fputcsv($df, array_keys(reset($array)));
-   foreach ($array as $row) {
-      fputcsv($df, $row);
-   }
-   fclose($df);
-   return ob_get_clean();
-}
-
 function downloadcsv($array) {
+    $shortcodes = ["NPP", "DPP", "GAS", "H2O"];
+    $csv_a = array();
+    foreach ($shortcodes as $key => $value) {
+        $arrFilter = array("type" => $value);
+        $json_a = arrayFilter($array, $arrFilter, false);
+        uasort($json_a, function ($i, $j) {
+          $a = $i['date'];
+          $b = $j['date'];
+          if ($a == $b) return 0;
+          elseif ($a > $b) return 1;
+          else return -1;
+        });
+        foreach ($json_a as $key => $value) {
+            $date = $value['date'];
+            $dt = new DateTime("@$date");
+            $line =  $value['type'] . "," . $value['content']. "," . $dt->format('d-m-Y '); 
+            array_push($csv_a, $line);
+        }
+    }
+
     download_send_headers("csv_export_" . date("Y-m-d") . ".csv");
-    echo array2csv($array);
+    echo "Type,Value,Date\n";
+    foreach ($csv_a as $key => $value) {
+        echo htmlspecialchars($value);
+        echo "\n";
+    }
+    
+    //echo array2csv($csv_a);
     die();
 }
 

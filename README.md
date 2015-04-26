@@ -1,12 +1,23 @@
 # NutsManager
 
-![Screenshot with webpagescreenshot.info](http://www.webpagescreenshot.info/i/15431-102201293433pm.png)
-
 NutsManager is a power/gas/water usage tracker written in PHP. It uses a JSON text file for the values and the visual side is created with Bootstrap. The graphs are made with the flot framework.  
 
-It helps me to keep track of my power usage, and shows me on which days I use a lot, and on which days I do not. That way, I know that a LAN party costs me a lot.
+It helps me to keep track of my power usage, and shows me on which days I use a lot, and on which days I do not.
 
 ## Changelog
+
+### v0.0.6
+
+- Fix graph sorting bug
+- Fix other array sorting bugs
+- Add High/Low overlay graph
+- Add graph to full overview page
+
+### v0.0.5
+
+- Convert 99lime kickstart to bootstrap
+- Change array format to use UUID's instead of my own random thingy
+- Cleanup
 
 ### v0.0.4
 - Program is now i18n compatible and has a Dutch and English translation.

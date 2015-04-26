@@ -25,7 +25,8 @@ echo '<li><a href="#gas" data-toggle="tab">'.$LANG["gas"].'</a></li>';
 echo '<li><a href="#h2o" data-toggle="tab">'.$LANG["water"].'</a></li>';
 echo "</ul>";
 
-if(is_array($json_a)) {   
+if(is_array($json_a)) { 
+  $havenpp = 0;
   echo '<div class="tab-content">';
   # start npp
   echo '<div id="npp" class="tab-pane fade in active">';
@@ -33,15 +34,18 @@ if(is_array($json_a)) {
 
   foreach ($json_a as $item => $value) {
     if ($value['type'] == "NPP") {  
-      $havenpp=1;
+      $havenpp += 1;
     }
   }
 
   if ($havenpp == 0) {
     echo "".$LANG["nodate"]."";
   } else {
+    if ($havenpp >= 3) {
+      makegraph($json_a,"NPP","yellow",$havenpp);
+    }
     for ($i=1; $i < 13; $i++) { 
-        #Months
+      #Months
       createdatearray($json_a,"npp",$i);
     }
   }
@@ -51,16 +55,19 @@ if(is_array($json_a)) {
   # start dpp
   echo "<div id=\"dpp\" class=\"tab-pane fade\">";
   echo"<h2><span class=\"glyphicon glyphicon-flash\"></span> ".$LANG["dpp"]."</h2>";
-
+  $havedpp = 0;
   foreach ($json_a as $item => $value) {
     if ($value['type'] == "DPP") {  
-      $havedpp=1;
+      $havedpp += 1;
     }
   }
 
   if ($havedpp == 0) {
     echo "".$LANG["nodata"]."";
   } else {
+    if ($havedpp >= 3) {
+      makegraph($json_a,"DPP","green",$havedpp);
+    }
     for ($i=1; $i < 13; $i++) { 
       createdatearray($json_a,"dpp",$i);
     } 
@@ -71,16 +78,19 @@ if(is_array($json_a)) {
   # start gas
   echo "<div id=\"gas\" class=\"tab-pane fade\">";
   echo"<h2><span class=\"glyphicon glyphicon-fire\"></span> ".$LANG["gas"]."</h2>";
-
+  $havegas = 0;
   foreach ($json_a as $item => $value) {
     if ($value['type'] == "GAS") {  
-      $havegas=1;
+      $havegas += 1;
     }
   }
 
   if ($havegas == 0) {
     echo "".$LANG["nodata"]."";
   } else {
+    if ($havegas >= 3) {
+      makegraph($json_a,"GAS","purple",$havegas);
+    }
     for ($i=1; $i < 13; $i++) { 
       createdatearray($json_a,"gas",$i);
     }
@@ -91,15 +101,19 @@ if(is_array($json_a)) {
   # start water
   echo "<div id=\"h2o\" class=\"tab-pane fade\">";
   echo"<h2><span class=\"glyphicon glyphicon-tint\"></span> ".$LANG["water"]."</h2>";
+  $haveh20 = 0;
   foreach ($json_a as $item => $value) {
     if ($value['type'] == "H2O") {  
-      $haveh2o=1;
+      $haveh2o += 1;
     }
   }
 
   if ($haveh2o == 0) {
     echo "".$LANG["nodata"]."";
   } else {
+    if ($haveh2o >= 3) {
+      makegraph($json_a,"H2O","blue",$haveh2o);
+    }
     for ($i=1; $i < 13; $i++) { 
       createdatearray($json_a,"h2o",$i);
     }
