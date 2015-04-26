@@ -12,10 +12,6 @@
     You should have received a copy of the GNU Affero General Public License
     along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
-error_reporting(E_ALL & ~E_NOTICE);
-$jsonfile = "power.json";
-$file = file_get_contents($jsonfile) or die("Cant open JSON file. Does it exist?.");
-$json_a = json_decode($file, true) or die("Cant decode JSON file. Is it a valid JSON file?");
 
 ?>
 

@@ -14,9 +14,7 @@
 */
 
 include("config.php");
-include("header.php");
 include("functions.php");
-
 
 if (empty($_GET['action'])) {
 	echo "".$LANG["noaction"]." \n<br /><a href=\"index.php\">".$LANG["goback"].".</a>";
@@ -174,6 +172,8 @@ if (empty($_GET['action'])) {
 		if ($found==0) {
 			echo "<a href=\"index.php\">".$LANG["eitemnotfound"]."</a>";
 		}
+	} elseif (isset($_GET['action']) && $_GET['action'] == 'csv' ) {
+		downloadcsv($json_a);
 	} else {
 		echo $LANG["enovalidaction"]."\n<br />Code x03. ";
 	}	

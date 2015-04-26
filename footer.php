@@ -20,6 +20,8 @@
 
 		<a href="full.php"><?php echo $LANG["monthlyoverview"]; ?></a><br />
 
+        <a href="action.php?action=csv"><?php echo $LANG["downloadcsv"]; ?></a><br />
+
 	</p>
 	<br />
 	<h2><?php echo $LANG["prices"]; ?></h2>

@@ -54,7 +54,7 @@ $LANG = array(
     "nodatatograph" => "No data to graph or display yet. Please add it.",
     "prices" => "Prices",
     "pricestext" => "Current prices:<br><ul><li>Power <sup>high kWh</sup>: " . $currency . " " . $NPPprice . "</li><li>Power <sup>low kWh</sup>: " . $currency . " " . $DPPprice . "</li><li>Gas <sup>m3</sup>: " . $currency . " " . $GASprice . "</li><li>Water <sup>m3</sup>: " . $currency . " " . $H2Oprice . "</li></ul>",
-    "" => "",
+    "downloadcsv" => "CSV Export",
     "" => ""
     );
 

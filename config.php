@@ -32,7 +32,14 @@ $currency="EUR";
 $productname = "NutsManager";
 $productversion = "v0.0.5";
 
+
+// Do not edit
 require('language.en.php');
 date_default_timezone_set('UTC');
+
+error_reporting(E_ALL & ~E_NOTICE);
+$jsonfile = "power.json";
+$file = file_get_contents($jsonfile) or die("Cannot open JSON file. Does it exist?.");
+$json_a = json_decode($file, true) or die("Cannot decode JSON file. Is it a valid JSON file?");
 
 ?>
