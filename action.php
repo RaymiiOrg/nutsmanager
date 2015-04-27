@@ -16,10 +16,13 @@
 include("config.php");
 include("functions.php");
 
+
 if (empty($_GET['action'])) {
+	include("header.php");
 	echo "".$LANG["noaction"]." \n<br /><a href=\"index.php\">".$LANG["goback"].".</a>";
 } elseif (isset($_GET['action']) && $_GET['action'] == 'edit' ) {
-#User wants to edit a value.
+	include("header.php");
+	#User wants to edit a value.
 	#sanitize the ID.
 	$id=htmlspecialchars($_GET['id']);
 	#We need to match the ID to the item.
@@ -52,6 +55,7 @@ if (empty($_GET['action'])) {
 	} 
 	
 }  elseif (isset($_GET['submit']) && $_GET['action'] == 'add' && !empty($_GET['content']) && !empty($_GET['type']) && !empty($_GET['date'])) {
+	include("header.php");
 	#User wants to add a item.
 	$value=htmlspecialchars($_GET['content']);
 	$itemcontent=htmlspecialchars($_GET['content']);
@@ -116,7 +120,8 @@ if (empty($_GET['action'])) {
 		echo $LANG["efailjsonwrite"];
 	}
 } elseif (isset($_GET['submit']) && $_GET['action'] == 'update' && !empty($_GET['id']) && !empty($_GET['content'])) {
-#update value
+	include("header.php");
+	#update value
 	$id=htmlspecialchars($_GET['id']);
 	$replacedvalue=htmlspecialchars($_GET['content']);
 	#Time for some validation..
@@ -150,7 +155,8 @@ if (empty($_GET['action'])) {
 	}
 	
 } elseif (isset($_GET['action']) && $_GET['action'] == 'delete' && !empty($_GET['id'])) {
-#delete task
+	include("header.php");
+	#delete task
 	$id=htmlspecialchars($_GET['id']);
 	foreach ($json_a as $item => $value) {
 		if ($item == $id) {
@@ -175,7 +181,8 @@ if (empty($_GET['action'])) {
 	} elseif (isset($_GET['action']) && $_GET['action'] == 'csv' ) {
 		downloadcsv($json_a);
 	} else {
-		echo $LANG["enovalidaction"]."\n<br />Code x03. ";
+		include("header.php");
+		echo $LANG["enovalidaction"]."\n<br />";
 	}	
 	echo "</div>";
 
