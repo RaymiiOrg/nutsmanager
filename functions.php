@@ -54,6 +54,26 @@ function arrayFilter($arrHaystack, $arrFilter, $boolStrict = false) {
   return $arrResult;    
 }
 
+function search($array, $key, $value) {
+  $results = array();
+  search_r($array, $key, $value, $results);
+  return $results;
+}
+
+function search_r($array, $key, $value, &$results) {
+  if (!is_array($array)) {
+    return;
+  }
+
+  if (isset($array[$key]) && $array[$key] == $value) {
+    $results[] = $array;
+  }
+
+  foreach ($array as $subarray) {
+    search_r($subarray, $key, $value, $results);
+  }
+}
+
 function makegraph($array,$shortcode,$color,$maxitems) {
   global $LANG;
   $arrFilter = array("type" => $shortcode);
@@ -182,6 +202,109 @@ function makeoverlaygraph($array,$shortcodes,$legends,$colors,$maxitems) {
   unset($totalitems);
 }
 # end makeoverlaygraph function
+
+
+function maketrippleoverlaygraph($array,$shortcodes,$legends,$colors,$maxitems) {
+  ## Collect all dpp and npp values, per date, and add them to a new array.
+  $totalResult = array();
+  foreach ($array as $arrayKey => $arrayValue) {
+    $dayResult = search($array, 'date', $arrayValue['date']);
+    foreach ($dayResult as $dayKey => $dayValue) {
+      $totalResult[$dayValue['date']]['key'] = $arrayKey;
+      if ($dayValue['type'] == 'NPP') {
+        $totalResult[$dayValue['date']]['NPP'] = (float)$dayValue['content'];
+      }
+      if ($dayValue['type'] == 'DPP') {
+        $totalResult[$dayValue['date']]['DPP'] = (float)$dayValue['content'];
+      }
+    }
+  }
+  ## process this new array and add the earlier found values to the json array
+  foreach ($totalResult as $key => $value) {
+    if (!empty($value['NPP']) && !empty($value['DPP'])) {
+      $combinedContent = $value['NPP'] + $value['DPP'];
+      $combUUID = gen_uuid();
+      $totalKey = array(
+        "content" => $combinedContent,
+        "type" => "TOT",
+        "date" => $key
+        );
+      $array[$combUUID] = $totalKey;
+    }
+  }
+
+  //pre_dump($array);
+
+  echo "<div id=\"" . implode("-", $shortcodes) . "-chart\">\n";
+  echo "<div id=\"" . implode("-", $shortcodes) . "graph\" style='width:600px;height:200px;'></div>\n";
+  echo "<script type='text/javascript'>\n";
+  echo "$(function () {\n";
+
+  foreach ($shortcodes as $key => $shortcode) {
+      $arrFilter = array("type" => $shortcode);
+      $json_a = arrayFilter($array, $arrFilter, true);
+      uasort($json_a, function ($i, $j) {
+        $a = $i['date'];
+        $b = $j['date'];
+        if ($a == $b) return 0;
+        elseif ($a > $b) return 1;
+        else return -1;
+      });
+      $codeitems=1;
+      $lastcode=null;
+      $totalitems=count($json_a);
+      $start_loop=0;
+      if(floatval($totalitems) > floatval($maxitems)) {
+        $array_diff = floatval($totalitems) - floatval($maxitems);
+        $start_loop = $array_diff;
+      }
+      echo "var d" . $key . " = [\n";
+      foreach (array_slice($json_a, $start_loop) as $item => $value) {
+        if($codeitems < $maxitems+1) {
+          $date = $value['date'];
+          $dt = new DateTime("@$date");
+          if($codeitems > 1) {
+            $codemin =  floatval($value['content']) - floatval($lastcode);
+          } else {
+            $codemin = 0;
+          }
+          if ($codeitems >= 2) {
+            echo "[\"" . $dt->format('z') . "\", " . floatval($codemin) . "]";
+            if ($codeitems == $maxitems) {
+              echo "\n";
+            } else {
+              echo ",\n";
+            }
+          }
+          $codeitems+=1;
+          $lastcode=$value['content'];
+        }
+      }
+      echo "];\n";
+    } 
+      echo "\n$.plot(\n";
+      echo "  $(\"#" . implode("-", $shortcodes) . "graph\"),\n"; 
+      echo "  [\n";
+        foreach ($shortcodes as $key => $shortcode) {
+          echo "{\n";
+          echo "  label: \" " . $legends[$key] . "\",\n";
+          echo "  data: d" . $key . ", \n";
+          echo "  color: ['" . $colors[$key] . "'],\n";
+          echo "  lines: {show: true},\n";
+          echo "  points: {show: true}\n";
+          echo "}";
+          if ($key != count($shortcodes) - 1) {
+            echo ",";
+          }
+        }
+    echo "]);\n";
+    echo "});\n";
+  echo "</script>";
+  echo "</div>";
+  unset($json_a);
+  unset($totalitems);
+}
+# end maketrippleoverlaygraph function
 
 function showitems($array,$name,$shortcode,$maxitems,$price,$outputformat) {
     global $LANG;

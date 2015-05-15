@@ -14,8 +14,8 @@
 */
 $LANG = array(
     "addvalue" => "Add value",
-    "npp" => "Normal price power",
-    "dpp" => "Discount price power",
+    "npp" => "High price power",
+    "dpp" => "Low price power",
     "gas" => "Gas",
     "water" => "Water",
     "edit" => "Edit",

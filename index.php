@@ -43,7 +43,7 @@ if(is_array($json_a)) {
     echo $LANG["nodatatograph"];
   } else {
     if ($havedpp >= 3 && $havenpp >= 3) {
-      makeoverlaygraph($json_a, ["NPP","DPP"], ["High","Low"], ["yellow","green"], 10);
+      maketrippleoverlaygraph($json_a, ["NPP","DPP","TOT"], ["High","Low","Total"], ["yellow","green", "red"], 10);
     }
   }
   echo "</div>";
