@@ -114,14 +114,20 @@ function makegraph($array,$shortcode,$color,$maxitems) {
       $lastcode=$value['content'];
     }
   }
-  echo "];\n";
+  echo "];\n";  
   echo "$.plot(\n";
   echo "$(\"#" . $shortcode ."graph\"), \n";
   echo " [ d2 ], {\n";
   echo "colors: ['". $color ."'], \n";
-  echo "lines: {show: true},\n";
-  echo "curvedLines: {apply: true},\n";
-  echo "points: {show: true}\n";
+  echo "lines: {show: true, fill: true},\n";
+  echo "points: {show: false},\n";
+  echo "  series: {\n";
+  echo "    curvedLines: {\n";
+  echo "      apply: true,\n";
+  echo "      active: true,\n";
+  echo "      monotonicFit: true\n";
+  echo "    }\n";
+  echo "  }\n";
   echo "});\n";
   echo "});\n";
   echo "</script>\n";
@@ -139,65 +145,74 @@ function makeoverlaygraph($array,$shortcodes,$legends,$colors,$maxitems) {
   echo "$(function () {\n";
 
   foreach ($shortcodes as $key => $shortcode) {
-      $arrFilter = array("type" => $shortcode);
-      $json_a = arrayFilter($array, $arrFilter, true);
-      uasort($json_a, function ($i, $j) {
-        $a = $i['date'];
-        $b = $j['date'];
-        if ($a == $b) return 0;
-        elseif ($a > $b) return 1;
-        else return -1;
-      });
-      $codeitems=1;
-      $lastcode=null;
-      $totalitems=count($json_a);
-      $start_loop=0;
-      if(floatval($totalitems) > floatval($maxitems)) {
-        $array_diff = floatval($totalitems) - floatval($maxitems);
-        $start_loop = $array_diff;
-      }
-      echo "var d" . $key . " = [\n";
-      foreach (array_slice($json_a, $start_loop) as $item => $value) {
-        if($codeitems < $maxitems+1) {
-          $date = $value['date'];
-          $dt = new DateTime("@$date");
-          if($codeitems > 1) {
-            $codemin =  floatval($value['content']) - floatval($lastcode);
+    $arrFilter = array("type" => $shortcode);
+    $json_a = arrayFilter($array, $arrFilter, true);
+    uasort($json_a, function ($i, $j) {
+      $a = $i['date'];
+      $b = $j['date'];
+      if ($a == $b) return 0;
+      elseif ($a > $b) return 1;
+      else return -1;
+    });
+    $codeitems=1;
+    $lastcode=null;
+    $totalitems=count($json_a);
+    $start_loop=0;
+    if(floatval($totalitems) > floatval($maxitems)) {
+      $array_diff = floatval($totalitems) - floatval($maxitems);
+      $start_loop = $array_diff;
+    }
+    echo "var d" . $key . " = [\n";
+    foreach (array_slice($json_a, $start_loop) as $item => $value) {
+      if($codeitems < $maxitems+1) {
+        $date = $value['date'];
+        $dt = new DateTime("@$date");
+        if($codeitems > 1) {
+          $codemin =  floatval($value['content']) - floatval($lastcode);
+        } else {
+          $codemin = 0;
+        }
+        if ($codeitems >= 2) {
+          echo "[\"" . $dt->format('z') . "\", " . floatval($codemin) . "]";
+          if ($codeitems == $maxitems) {
+            echo "\n";
           } else {
-            $codemin = 0;
+            echo ",\n";
           }
-          if ($codeitems >= 2) {
-            echo "[\"" . $dt->format('z') . "\", " . floatval($codemin) . "]";
-            if ($codeitems == $maxitems) {
-              echo "\n";
-            } else {
-              echo ",\n";
-            }
-          }
-          $codeitems+=1;
-          $lastcode=$value['content'];
         }
+        $codeitems+=1;
+        $lastcode=$value['content'];
       }
-      echo "];\n";
-    } 
-      echo "\n$.plot(\n";
-      echo "  $(\"#" . implode("-", $shortcodes) . "graph\"),\n"; 
-      echo "  [\n";
-        foreach ($shortcodes as $key => $shortcode) {
-          echo "{\n";
-          echo "  label: \" " . $legends[$key] . "\",\n";
-          echo "  data: d" . $key . ", \n";
-          echo "  color: ['" . $colors[$key] . "'],\n";
-          echo "  lines: {show: true},\n";
-          echo "curvedLines: {apply: true},\n";
-          echo "  points: {show: true}\n";
-          echo "}";
-          if ($key != count($shortcodes) - 1) {
-            echo ",";
-          }
-        }
-    echo "]);\n";
-    echo "});\n";
+    }
+    echo "];\n";
+  } 
+
+  echo "var options = {\n";
+  echo "  series: {\n";
+  echo "    curvedLines: {\n";
+  echo "      apply: true,\n";
+  echo "      active: true,\n";
+  echo "      monotonicFit: true\n";
+  echo "    }\n";
+  echo "  }\n";
+
+  echo "\n$.plot(\n";
+  echo "  $(\"#" . implode("-", $shortcodes) . "graph\"),\n"; 
+  echo "  [\n";
+  foreach ($shortcodes as $key => $shortcode) {
+    echo "{\n";
+    echo "  label: \" " . $legends[$key] . "\",\n";
+    echo "  data: d" . $key . ", \n";
+    echo "  color: ['" . $colors[$key] . "'],\n";
+    echo "  lines: {show: true, fill: true},\n";
+    echo "  points: {show: false}\n";
+    echo "}";
+    if ($key != count($shortcodes) - 1) {
+      echo ",";
+    }
+  }
+  echo "], options);\n";
+  echo "});\n";
   echo "</script>";
   echo "</div>";
   unset($json_a);
@@ -292,7 +307,7 @@ function maketrippleoverlaygraph($array,$shortcodes,$legends,$colors,$maxitems) 
     echo "      monotonicFit: true\n";
     echo "    }\n";
     echo "  }\n";
-    
+
     echo "};";
     echo "\n$.plot(\n";
     echo "  $(\"#" . implode("-", $shortcodes) . "graph\"),\n"; 
