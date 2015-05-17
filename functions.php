@@ -120,6 +120,7 @@ function makegraph($array,$shortcode,$color,$maxitems) {
   echo " [ d2 ], {\n";
   echo "colors: ['". $color ."'], \n";
   echo "lines: {show: true},\n";
+  echo "curvedLines: {apply: true},\n";
   echo "points: {show: true}\n";
   echo "});\n";
   echo "});\n";
@@ -188,6 +189,7 @@ function makeoverlaygraph($array,$shortcodes,$legends,$colors,$maxitems) {
           echo "  data: d" . $key . ", \n";
           echo "  color: ['" . $colors[$key] . "'],\n";
           echo "  lines: {show: true},\n";
+          echo "curvedLines: {apply: true},\n";
           echo "  points: {show: true}\n";
           echo "}";
           if ($key != count($shortcodes) - 1) {
@@ -282,27 +284,39 @@ function maketrippleoverlaygraph($array,$shortcodes,$legends,$colors,$maxitems) 
       }
       echo "];\n";
     } 
-      echo "\n$.plot(\n";
-      echo "  $(\"#" . implode("-", $shortcodes) . "graph\"),\n"; 
-      echo "  [\n";
-        foreach ($shortcodes as $key => $shortcode) {
-          echo "{\n";
-          echo "  label: \" " . $legends[$key] . "\",\n";
-          echo "  data: d" . $key . ", \n";
-          echo "  color: ['" . $colors[$key] . "'],\n";
-          echo "  lines: {show: true},\n";
-          echo "  points: {show: true}\n";
-          echo "}";
-          if ($key != count($shortcodes) - 1) {
-            echo ",";
-          }
+    echo "var options = {\n";
+    echo "  series: {\n";
+    echo "    curvedLines: {\n";
+    echo "      apply: true,\n";
+    echo "      active: true,\n";
+    echo "      monotonicFit: true\n";
+    echo "    }\n";
+    echo "  }\n";
+    
+    echo "};";
+    echo "\n$.plot(\n";
+    echo "  $(\"#" . implode("-", $shortcodes) . "graph\"),\n"; 
+    echo "  [\n";
+      foreach ($shortcodes as $key => $shortcode) {
+        echo "{\n";
+        echo "  label: \" " . $legends[$key] . "\",\n";
+        echo "  data: d" . $key . ", \n";
+        echo "  color: ['" . $colors[$key] . "'],\n";
+        echo "  lines: {show: true, fill: true},\n";
+        echo "  stack: true,\n";
+        echo "  points: {show: false}\n";
+        echo "}";
+        if ($key != count($shortcodes) - 1) {
+          echo ",";
         }
-    echo "]);\n";
+      }
+    echo "], options);\n";
+
     echo "});\n";
-  echo "</script>";
-  echo "</div>";
-  unset($json_a);
-  unset($totalitems);
+    echo "</script>";
+    echo "</div>";
+    unset($json_a);
+    unset($totalitems);
 }
 # end maketrippleoverlaygraph function
 
