@@ -278,19 +278,21 @@ function maketrippleoverlaygraph($array,$shortcodes,$legends,$colors,$maxitems) 
       echo "var d" . $key . " = [\n";
       foreach (array_slice($json_a, $start_loop) as $item => $value) {
         if($codeitems < $maxitems+1) {
-          $date = $value['date'];
-          $dt = new DateTime("@$date");
-          if($codeitems > 1) {
-            $codemin =  floatval($value['content']) - floatval($lastcode);
-          } else {
-            $codemin = 0;
-          }
-          if ($codeitems >= 2) {
-            echo "[\"" . $dt->format('z') . "\", " . floatval($codemin) . "]";
-            if ($codeitems == $maxitems) {
-              echo "\n";
+          if ($value['type'] == 'TOT') {
+            $date = $value['date'];
+            $dt = new DateTime("@$date");
+            if($codeitems > 1) {
+              $codemin =  floatval($value['content']) - floatval($lastcode);
             } else {
-              echo ",\n";
+              $codemin = 0;
+            }
+            if ($codeitems >= 2) {
+              echo "[\"" . $dt->format('z') . "\", " . floatval($codemin) . "]";
+              if ($codeitems == $maxitems) {
+                echo "\n";
+              } else {
+                echo ",\n";
+              }
             }
           }
           $codeitems+=1;
@@ -313,16 +315,18 @@ function maketrippleoverlaygraph($array,$shortcodes,$legends,$colors,$maxitems) 
     echo "  $(\"#" . implode("-", $shortcodes) . "graph\"),\n"; 
     echo "  [\n";
       foreach ($shortcodes as $key => $shortcode) {
-        echo "{\n";
-        echo "  label: \" " . $legends[$key] . "\",\n";
-        echo "  data: d" . $key . ", \n";
-        echo "  color: ['" . $colors[$key] . "'],\n";
-        echo "  lines: {show: true, fill: true},\n";
-        echo "  stack: true,\n";
-        echo "  points: {show: false}\n";
-        echo "}";
-        if ($key != count($shortcodes) - 1) {
-          echo ",";
+          if ($shortcode == 'TOT') {
+          echo "{\n";
+          echo "  label: \" " . $legends[$key] . "\",\n";
+          echo "  data: d" . $key . ", \n";
+          echo "  color: ['" . $colors[$key] . "'],\n";
+          echo "  lines: {show: true, fill: true},\n";
+          echo "  stack: true,\n";
+          echo "  points: {show: false}\n";
+          echo "}";
+          if ($key != count($shortcodes) - 1) {
+            echo ",";
+          }
         }
       }
     echo "], options);\n";
@@ -635,7 +639,7 @@ function showinputform($actionpage) {
     echo "<option value=\"H2O\">".$LANG["water"]."</option>\n";
     echo "</select>\n";
     echo "  <input name=\"content\" type=\"text\" placeholder=\"".$LANG["value"]."\" ></input>\n";
-    echo "<input name=\"date\" type=\"text\" value=\"${vandaag}\"></input>\n";
+    echo "<input name=\"date\" id=\"datepicker\" type=\"text\" value=\"${vandaag}\"></input>\n";
     echo "<input type=\"hidden\" name=\"action\" value=\"add\"></input>\n";
     echo "&nbsp; &nbsp; ";
     echo "<input type=\"submit\" name=\"submit\" value=\"".$LANG["additem"]."\"></input>\n";
