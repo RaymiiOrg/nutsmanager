@@ -34,7 +34,9 @@ if (empty($_GET['action'])) {
 		if ($item == $id) {
 			$found = 1;
 			echo $LANG[strtolower($value["type"])] . " for ";
-			echo htmlspecialchars($value["date"]) . " <br>(current value: <i>";
+			$date = $value['date'];
+      $dt = new DateTime("@$date");
+			echo htmlspecialchars($dt->format('D d M Y ')) . " <br>(current value: <i>";
 			echo htmlspecialchars($value["content"]) . "</i>): <br><br>";
 			echo "<form name=\"edit\" action=\"action.php\" method=\"GET\">";
 			echo "<input name=\"content\" type=\"text\" value=\"";
