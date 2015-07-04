@@ -23,10 +23,20 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/jquery-ui.js"></script>
 <script type="text/javascript" src="js/jquery.flot.js"></script>
 <script type="text/javascript" src="js/curvedLines.js"></script>
 <script type="text/javascript" src="js/tabs.js"></script>
-<link href="css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="css/bootstrap.min.css">
+<link rel="stylesheet" href="css/jquery-ui.css">
+<script>
+$(function() {
+  $("#datepicker").datepicker({
+    dateFormat: "mm-dd-yy",
+    showButtonPanel: true
+  });
+});
+</script>
 </head>
 <a id="top-of-page"></a>
   <div id='page-content-wrapper'>
