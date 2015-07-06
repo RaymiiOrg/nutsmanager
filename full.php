@@ -19,24 +19,45 @@ include("functions.php");
 include("header.php");
 
 echo '<ul class="nav nav-tabs">';
-echo '<li class="active"><a href="#npp" data-toggle="tab">'.$LANG["npp"].'</a></li>';
+echo '<li class="active"><a href="#nppdppoverlay" data-toggle="tab">'.$LANG["nppdppoverlay"].'</a></li>';
+echo '<li><a href="#npp" data-toggle="tab">'.$LANG["npp"].'</a></li>';
 echo '<li><a href="#dpp" data-toggle="tab">'.$LANG["dpp"].'</a></li>';
 echo '<li><a href="#gas" data-toggle="tab">'.$LANG["gas"].'</a></li>';
 echo '<li><a href="#h2o" data-toggle="tab">'.$LANG["water"].'</a></li>';
 echo "</ul>";
 
 if(is_array($json_a)) { 
-  $havenpp = 0;
-  echo '<div class="tab-content">';
-  # start npp
-  echo '<div id="npp" class="tab-pane fade in active">';
-  echo"<h2><span class=\"glyphicon glyphicon-flash\"></span> ".$LANG["npp"]."</h2>";
 
-  foreach ($json_a as $item => $value) {
+
+  foreach ((array) $json_a as $item => $value) {
+    if ($value['type'] == "DPP") {  
+      $havedpp += 1;
+    }
     if ($value['type'] == "NPP") {  
       $havenpp += 1;
     }
   }
+
+
+  echo '<div class="tab-content">';
+  # start total
+  echo '<div id="nppdppoverlay" class="tab-pane fade in active">';
+  echo"<h2><span class=\"glyphicon glyphicon-flash\"></span> ".$LANG["nppdppoverlay"]."</h2>";
+  if ($havedpp == 0 || $havenpp == 0) {
+    echo $LANG["nodatatograph"];
+  } else {
+    if ($havedpp >= 3 && $havenpp >= 3) {
+      maketrippleoverlaygraph($json_a, ["TOT","NPP","DPP"], ["Total","High","Low"], ["red","yellow", "green"], $havenpp);
+    }
+  }
+  for ($i=1; $i < 13; $i++) { 
+      createdoubledatearray($json_a,"npp","dpp",$i);
+  } 
+  echo '</div>';
+  # start npp
+  echo '<div id="npp" class="tab-pane fade in">';
+  echo"<h2><span class=\"glyphicon glyphicon-flash\"></span> ".$LANG["npp"]."</h2>";
+
 
   if ($havenpp == 0) {
     echo "".$LANG["nodate"]."";
@@ -49,18 +70,14 @@ if(is_array($json_a)) {
       createdatearray($json_a,"npp",$i);
     }
   }
+
   echo "</div>";
   # end npp
 
   # start dpp
   echo "<div id=\"dpp\" class=\"tab-pane fade\">";
   echo"<h2><span class=\"glyphicon glyphicon-flash\"></span> ".$LANG["dpp"]."</h2>";
-  $havedpp = 0;
-  foreach ($json_a as $item => $value) {
-    if ($value['type'] == "DPP") {  
-      $havedpp += 1;
-    }
-  }
+
 
   if ($havedpp == 0) {
     echo "".$LANG["nodata"]."";

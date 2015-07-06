@@ -25,6 +25,8 @@ $DPPprice=0.2072;
 $GASprice=0.6129;
 # per m3
 $H2Oprice=0.914;
+
+$TOTprice=$NPPprice+$DPPprice;
 # price symbol/name
 $currency="EUR";
 

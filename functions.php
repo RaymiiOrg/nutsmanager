@@ -624,6 +624,143 @@ function createdatearray($json_a,$itemtype,$maand) {
 # end date function
 
 
+# start double date function
+function createdoubledatearray($json_a,$itemtype1,$itemtype2,$maand) {
+    global $LANG;
+    global $currency;
+    $totalResult = array();
+    foreach ($json_a as $arrayKey => $arrayValue) {
+      $dayResult = search($json_a, 'date', $arrayValue['date']);
+      foreach ($dayResult as $dayKey => $dayValue) {
+        $totalResult[$dayValue['date']]['key'] = $arrayKey;
+        if ($dayValue['type'] == 'NPP') {
+          $totalResult[$dayValue['date']]['NPP'] = (float)$dayValue['content'];
+        }
+        if ($dayValue['type'] == 'DPP') {
+          $totalResult[$dayValue['date']]['DPP'] = (float)$dayValue['content'];
+        }
+      }
+    }
+    ## process this new array and add the earlier found values to the json array
+    foreach ($totalResult as $key => $value) {
+      if (!empty($value['NPP']) && !empty($value['DPP'])) {
+        $combinedContent = $value['NPP'] + $value['DPP'];
+        $combUUID = gen_uuid();
+        $totalKey = array(
+          "content" => $combinedContent,
+          "type" => "TOT",
+          "date" => $key
+          );
+        $json_a[$combUUID] = $totalKey;
+      }
+    }
+    $itemtype = "TOT";
+    ${$itemtype . "month"} = array();
+    ${$itemtype . "items"} = array();
+
+    
+    uasort($json_a, function ($i, $j) {
+      $a = $i['date'];
+      $b = $j['date'];
+      if ($a == $b) return 0;
+      elseif ($a > $b) return 1;
+      else return -1;
+    });
+    foreach ($json_a as $item => $itemarray) {
+        if ($itemarray["type"] == strtoupper($itemtype)) {
+            ${$itemtype . "items"}[] = array("content" => $itemarray["content"], "date" => $itemarray["date"], "ID" => $item);
+        } 
+    }
+
+    for ($i=0; $i < count(${$itemtype . "items"}); $i++) { 
+        $date = ${$itemtype . "items"}[$i]["date"];
+        $dt = new DateTime("@$date");
+        $idate = $dt->format('n');
+        ${$itemtype . "month"}[$idate][${$itemtype . "items"}["$i"]["ID"]] = array("date" => ${$itemtype ."items"}[$i]["date"], "content" => ${$itemtype ."items"}[$i]["content"]);
+    }
+
+    $maandnaam=date( 'F', mktime(0, 0, 0, $maand) );
+    global ${strtoupper($itemtype) . "price"};
+    $price = ${strtoupper($itemtype) . "price"};
+    ksort(${$itemtype."month"});
+
+    if (count(${$itemtype."month"}[$maand]) != 0) {
+        echo "<h3>" . $maandnaam . "</h3>\n";
+        echo "<table class=\"table table-striped\">\n";
+        echo "<tr>\n";
+        echo "<th>".$LANG["day"]."</th>\n";
+        echo "<th>".$LANG["usage"]."</th>\n";
+        echo "<th>".$LANG["difference"]."</th>\n";
+        echo "<th>".$LANG["price"]."</th>\n";
+        echo "<th>".$LANG["editdelete"]."</th>\n";
+        echo "</tr>\n";
+        $items=0;
+        $lastcontent=0;
+        $totaloftype=0;
+        $totalprice=0;
+        
+        foreach (${$itemtype . "month"}[$maand] as $key => $value) {
+            if (!empty($value["date"])) {
+                if ($items >= 1) {
+                    $diff = $value["content"] - $lastcontent;
+                    $itemprice = floatval($diff) * floatval($price);
+                } else {
+                    $itemprice = 0;
+                }
+                
+                echo "<tr>\n";
+                echo "<td>\n";
+                $date = $value['date'];
+                $dt = new DateTime("@$date");
+                echo $dt->format('D d M Y ');
+                //echo date('l',strtotime(str_replace('-', '/',$value["date"]))) . " " . date('d',strtotime(str_replace('-', '/',$value["date"]))) . " " . date('M',strtotime(str_replace('-', '/',$value["date"])));
+                echo "</td>\n";
+                echo "<td>" . $value["content"] . "</td>\n";
+
+                if ($items >= 1) {
+                    #difference
+                    echo "<td>" . round($diff,3) . "</td>\n";
+
+                } else {
+                    echo "<td> - </td>\n";
+                }
+                #price
+                echo "<td>".$currency.": " . round($itemprice,2) . "</td>\n";
+                echo "<td>";
+                            #Edit
+                echo "<a href=\"action.php?id=" .$key. "&action=edit\"><span class='glyphicon glyphicon-edit' aria-hidden='true'></span></a>";
+
+                echo " - ";            
+                #Delete
+                echo "<a href=\"action.php?id=" .$key. "&action=delete\" onclick=\"if (!confirm('Are you sure you want to delete this item?')) return false;\"><span class='glyphicon glyphicon-remove' aria-hidden='true'></span></a>";
+
+
+                $lastcontent=$value["content"];
+                $totalprice += $itemprice;
+                
+                $items += 1;
+                echo "</tr>\n";
+            }
+        }
+        echo "<tr>\n";
+        $firstelement=reset(${$itemtype . "month"}[$maand]);
+        $firstelement=$firstelement["content"];        
+        $lastelement=end(${$itemtype . "month"}[$maand]);
+        $lastelement=$lastelement["content"];
+        $totaloftype=floatval($lastelement)-floatval($firstelement);
+        reset(${$itemtype . "month"}[$maand]);
+        echo"<td colspan=\"2\">".$LANG["total"]." ".strtolower($LANG["usage"]).": " . round($totaloftype,3) . "</td>\n";
+        echo "<td colspan=\"2\">".$LANG["total"]." ".strtolower($LANG["price"]).": " . $currency . ": ".round($totalprice,2) . "</td>\n";
+        echo "<td></td>";
+        echo "</tr>";
+        echo "</table>";
+
+    } else {
+        echo " ";
+    }
+}
+# end double date function
+
 # start showform function
 
 function showinputform($actionpage) {
