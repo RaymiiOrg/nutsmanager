@@ -54,6 +54,7 @@ if (empty($_GET['action'])) {
 	if ($found == 0) {
 		#We don't have a match.
 		echo $LANG["itemnotfound"];
+		echo "\n<br /><a href=\"index.php\">".$LANG["goback"].".</a>";
 	} 
 	
 }  elseif (isset($_GET['submit']) && $_GET['action'] == 'add' && !empty($_GET['content']) && !empty($_GET['type']) && !empty($_GET['date'])) {
@@ -66,22 +67,22 @@ if (empty($_GET['action'])) {
 	#Time for some falidation..
 	#We only want numeric shizzle, we cannot graph text	
 	if(!is_numeric($value)) {
+		echo "\n<br /><a href=\"index.php\">".$LANG["goback"].".</a>\n<br>";
 		die($LANG["enumeric"]);
 	}
 	$date=htmlspecialchars($_GET['date']);	
 
 	#is it a date I want?
 	if(!preg_match('/([0-9]{2}-[0-9]{2}-[0-9]{4})/', $date)){
+		echo "\n<br /><a href=\"index.php\">".$LANG["goback"].".</a>\n<br>";
 		die($LANG["edateformat"]);
 	}
 
 	#does the date already exists
-	$addfilter = array("type" => $type);
-	$filt_a=arrayFilter($json_a, $addfilter, true);
-	foreach ((array) $filt_a as $item => $loopvalue) {
-
-		if($loopvalue['date'] == $date) {
-				die($LANG["edateexist"]);
+	foreach ((array) $json_a as $item => $loopvalue) {
+		if($loopvalue['date'] == strtotime(str_replace('-', '/', $date))) {
+			echo "\n<br /><a href=\"index.php\">".$LANG["goback"].".</a>\n<br>";
+			die($LANG["edateexist"]);
 			}
 		}
 
